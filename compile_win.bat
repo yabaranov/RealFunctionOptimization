@@ -1,4 +1,4 @@
 mkdir build
 cd build
-cmake ../src/
+cmake ../
 cmake --build . --config Release --target Sample
