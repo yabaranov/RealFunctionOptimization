@@ -26,10 +26,10 @@ std::pair<size_t, size_t> InterpolationSplineBase::FindIntervalOfArguments(doubl
    if(it == m_arguments.begin())
       it++;
 
-   auto Index2 = std::distance(m_arguments.begin(), it);
-   auto Index1 = Index2 - 1;
+   auto index2 = std::distance(m_arguments.begin(), it);
+   auto index1 = index2 - 1;
 
-   return std::pair{Index1, Index2};
+   return std::pair{index1, index2};
 }
 
 }

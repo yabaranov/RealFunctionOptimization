@@ -18,7 +18,7 @@ private:
       InternalInterpolationCubicSpline(const Vector& parameters);
       double Value(const Vector& point) override;
    private:
-      double getSplineCoefficient(size_t index);
+      double GetSplineCoefficient(size_t index);
    };
 };
 }

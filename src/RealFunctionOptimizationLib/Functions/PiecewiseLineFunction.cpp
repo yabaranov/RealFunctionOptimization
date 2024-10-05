@@ -11,16 +11,13 @@ PiecewiseLineFunction::InternalPiecewiseLineFunction::InternalPiecewiseLineFunct
 Vector PiecewiseLineFunction::InternalPiecewiseLineFunction::Gradient(const Vector& point)
 {
    if(point.size() != 1)
-      throw std::runtime_error("The piecewise line function gradient can only be calculated at one point");
+      throw std::runtime_error("The piecewise line function gradient can only be calculated at 1d point");
 
    auto argument = point[0];
-
-   auto intervalOfArguments = FindIntervalOfArguments(argument);
-   auto Index1 = intervalOfArguments.first;
-   auto Index2 = intervalOfArguments.second;
+   auto&& [index1, index2] = FindIntervalOfArguments(argument);
 
    Vector gradient;
-   gradient << (m_values(Index2) - m_values(Index1)) / (m_arguments(Index2) - m_arguments(Index1));
+   gradient << (m_values(index2) - m_values(index1)) / (m_arguments(index2) - m_arguments(index1));
 
    return gradient;
 }
@@ -28,16 +25,13 @@ Vector PiecewiseLineFunction::InternalPiecewiseLineFunction::Gradient(const Vect
 double PiecewiseLineFunction::InternalPiecewiseLineFunction::Value(const Vector& point)
 {
    if(point.size() != 1)
-      throw std::runtime_error("The piecewise line function can only be calculated at one point");
+      throw std::runtime_error("The piecewise line function can only be calculated at 1d point");
 
    auto argument = point[0];
+   auto&& [index1, index2] = FindIntervalOfArguments(argument);
 
-   auto intervalOfArguments = FindIntervalOfArguments(argument);
-   auto Index1 = intervalOfArguments.first;
-   auto Index2 = intervalOfArguments.second;
-
-   return m_values(Index1) +
-          (argument - m_arguments(Index1)) * (m_values(Index2) - m_values(Index1)) / (m_arguments(Index2) - m_arguments(Index1));
+   return m_values(index1) +
+          (argument - m_arguments(index1)) * (m_values(index2) - m_values(index1)) / (m_arguments(index2) - m_arguments(index1));
 }
 
 std::unique_ptr<IFunction> PiecewiseLineFunction::Bind(const Vector& parameters)

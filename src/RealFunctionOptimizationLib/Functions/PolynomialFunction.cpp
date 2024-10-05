@@ -10,7 +10,7 @@ PolynomialFunction::InternalPolynomialFunction::InternalPolynomialFunction(const
 double PolynomialFunction::InternalPolynomialFunction::Value(const Vector& point)
 {
    if(point.size() != 1)
-      throw std::runtime_error("The polynomial can only be calculated at one point");
+      throw std::runtime_error("The polynomial can only be calculated at 1d point");
 
    auto argument = point[0];
 
