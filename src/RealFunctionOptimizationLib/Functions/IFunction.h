@@ -15,7 +15,7 @@ class IParametricFunction
 {
 public:
    virtual ~IParametricFunction() = default;
-   virtual IFunction Bind(const Vector& parameters) = 0;
+   virtual std::unique_ptr<IFunction> Bind(const Vector& parameters) = 0;
 };
 
 class IDifferentiableFunction : public IFunction
