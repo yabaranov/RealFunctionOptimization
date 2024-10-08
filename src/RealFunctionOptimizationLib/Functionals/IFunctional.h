@@ -4,6 +4,7 @@
 namespace Functions
 {
     class IFunction;
+    struct FunctionPointAndValue;
 }
 
 namespace Functionals
@@ -12,21 +13,37 @@ namespace Functionals
     {
     public:
         virtual ~IFunctional() = default;
-        double Value(Functions::IFunction& function);
+        virtual double Value(Functions::IFunction& function);
     };
 
     class IDifferentiableFunctional : public IFunctional
     {
     public:
         ~IDifferentiableFunctional() override = default;
-        Vector Gradient(Functions::IFunction& function);
+        virtual Vector Gradient(Functions::IFunction& function);
     };
 
     class ILeastSquaresFunctional : public IFunctional
     {
     public:
         ~ILeastSquaresFunctional() override = default;
-        Vector Residual(Functions::IFunction& function);
-        Matrix Jacobian(Functions::IFunction& function);
+        virtual Vector Residual(Functions::IFunction& function);
+        virtual Matrix Jacobian(Functions::IFunction& function);
+    };
+
+    struct FunctionPointAndValue
+    {
+       Vector point;
+       double value;
+    };
+
+    class FunctionalBase
+    {
+    public:
+       FunctionalBase(const std::vector<FunctionPointAndValue>& functionValueTable) : m_functionValueTable(functionValueTable)
+       {}
+
+    protected:
+       std::vector<FunctionPointAndValue> m_functionValueTable;
     };
 }
