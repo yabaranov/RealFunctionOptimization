@@ -28,9 +28,11 @@ Vector GaussNewtonOptimizator::Minimize(IFunctional& objective, IParametricFunct
         Vector residual = leastSquaresFunctional.Residual(*function.Bind(parameters));
         if (residual.norm() < m_maxResidual)
             break;
-    
-        Matrix jacobianInverse = leastSquaresFunctional.Jacobian(*function.Bind(parameters)).inverse();
-        parameters = parameters - jacobianInverse * residual;
+
+        Matrix jacobian = leastSquaresFunctional.Jacobian(*function.Bind(parameters));
+        Matrix hessianInverse = (jacobian.transpose() * jacobian).inverse();
+        
+        parameters = parameters - hessianInverse * jacobian.transpose() * residual;
     }
 
     return parameters;
