@@ -12,7 +12,7 @@ target_include_directories(${LIB_NAME}
   PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
-target_compile_features(${LIB_NAME} PRIVATE cxx_std_20)
+target_compile_features(${LIB_NAME} PRIVATE cxx_std_23)
 
 if (MSVC)
     target_compile_options(${LIB_NAME} PRIVATE /MP)

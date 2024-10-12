@@ -4,11 +4,12 @@
 namespace Functions
 {
     class IFunction;
-    struct FunctionPointAndValue;
 }
 
 namespace Functionals
 {
+    struct FunctionPointAndValue;
+
     class IFunctional
     {
     public:

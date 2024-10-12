@@ -4,7 +4,6 @@
 
 namespace Functionals
 {
-
 class L2NormDifferenceFunctional : public IDifferentiableFunctional, public ILeastSquaresFunctional, public FunctionalBase
 {
 public:
@@ -14,5 +13,4 @@ public:
    Vector Residual(Functions::IFunction& function) override;
    Matrix Jacobian(Functions::IFunction& function) override;
 };
-
 }
