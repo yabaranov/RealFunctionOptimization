@@ -2,6 +2,8 @@
 
 #include "Functions/IFunction.h"
 
+#include <ranges>
+
 namespace Functionals
 {
 using namespace Functions;
@@ -26,12 +28,11 @@ double L2NormDifferenceFunctional::Value(IFunction& function)
 
 Vector L2NormDifferenceFunctional::Gradient(IFunction& function)
 {
-   Vector gradient = Vector::Zero(m_functionValueTable.size());
-
    if(dynamic_cast<IDifferentiableFunction*>(&function) == nullptr)
       throw std::runtime_error("Gradient accepts only IDifferentiableFunction objective functions");
-
    auto& differentiableFunction = dynamic_cast<IDifferentiableFunction&>(function);
+   
+   Vector gradient = Vector::Zero(m_functionValueTable.size());
 
    for (const auto& functionPointAndValue : m_functionValueTable)
    {
@@ -44,4 +45,34 @@ Vector L2NormDifferenceFunctional::Gradient(IFunction& function)
    return gradient;
 }
 
+Vector L2NormDifferenceFunctional::Residual(IFunction& function)
+{
+   if(dynamic_cast<IDifferentiableFunction*>(&function) == nullptr)
+      throw std::runtime_error("Gradient accepts only IDifferentiableFunction objective functions");
+   
+   Vector residual = Vector::Zero(m_functionValueTable.size());
+   for (auto&& [index, pointValue] : std::views::enumerate(m_functionValueTable))
+      residual[index] = function.Value(pointValue.point) - pointValue.value;
+
+   return residual;
 }
+
+Matrix L2NormDifferenceFunctional::Jacobian(IFunction& function)
+{
+   if(dynamic_cast<IDifferentiableFunction*>(&function) == nullptr)
+      throw std::runtime_error("Gradient accepts only IDifferentiableFunction objective functions");
+   auto& differentiableFunction = dynamic_cast<IDifferentiableFunction&>(function);
+
+   Matrix jacobian = Matrix::Zero(m_functionValueTable.size(), m_functionValueTable.size());
+   for (auto&& [index, pointValue] : std::views::enumerate(m_functionValueTable))
+   {
+      Vector functionGradient = differentiableFunction.Gradient(pointValue.point);
+
+      auto difference = function.Value(pointValue.point) - pointValue.value;
+      jacobian.row(index) = 2 * difference * functionGradient;
+   }
+   
+   return jacobian;
+}
+}
+

@@ -23,5 +23,4 @@ double LInfNormDifferenceFunctional::Value(IFunction& function)
 
    return max;
 }
-
 }

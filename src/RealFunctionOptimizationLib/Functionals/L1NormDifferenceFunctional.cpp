@@ -26,12 +26,11 @@ double L1NormDifferenceFunctional::Value(IFunction& function)
 
 Vector L1NormDifferenceFunctional::Gradient(IFunction& function)
 {
-   Vector gradient = Vector::Zero(m_functionValueTable.size());
-
    if(dynamic_cast<IDifferentiableFunction*>(&function) == nullptr)
        throw std::runtime_error("Gradient accepts only IDifferentiableFunction objective functions");
-
    auto& differentiableFunction = dynamic_cast<IDifferentiableFunction&>(function);
+   
+   Vector gradient = Vector::Zero(m_functionValueTable.size());
 
    for (const auto& functionPointAndValue : m_functionValueTable)
    {
@@ -43,5 +42,4 @@ Vector L1NormDifferenceFunctional::Gradient(IFunction& function)
 
    return gradient;
 }
-
 }
