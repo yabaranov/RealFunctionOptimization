@@ -8,8 +8,6 @@ namespace Functions
 
 namespace Functionals
 {
-    struct FunctionPointAndValue;
-
     class IFunctional
     {
     public:
