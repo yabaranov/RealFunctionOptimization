@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 #include "Functions/LineFunctionBase.h"
 
-TEST(LineFunctionBaseTests, Constructor_WithZeroSizeOfParameters_ShouldThrowException)
+TEST(LineFunctionBaseTests, Constructor_WithEmptyParameters_ShouldThrowException)
 {
     Vector parameters;
 
