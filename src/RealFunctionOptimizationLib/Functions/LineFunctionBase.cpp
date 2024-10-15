@@ -14,4 +14,14 @@ LineFunctionBase::LineFunctionBase(const Vector& parameters)
    m_freeMember = parameters(parameters.size() - 1);
 }
 
+double LineFunctionBase::getFreeMember() const
+{
+    return m_freeMember;
+}
+
+double LineFunctionBase::getCoefficient(size_t index) const
+{
+    return m_coefficients(index);
+}
+
 }

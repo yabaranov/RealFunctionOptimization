@@ -32,4 +32,14 @@ std::pair<size_t, size_t> InterpolationSplineBase::FindIntervalOfArguments(doubl
    return std::pair{index1, index2};
 }
 
+double InterpolationSplineBase::getArgument(size_t index) const
+{
+    return m_arguments(index);
+}
+
+double InterpolationSplineBase::getValue(size_t index) const
+{
+    return m_values(index);
+}
+
 }
