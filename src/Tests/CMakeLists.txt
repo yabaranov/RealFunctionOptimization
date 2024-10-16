@@ -10,7 +10,10 @@ FetchContent_MakeAvailable(googletest)
 
 add_executable(${PROJECT_NAME} main.cpp
     Functions/LineFunctionBaseTests.cpp
-    Functions/LineFunctionTests.cpp)
+    Functions/LineFunctionTests.cpp
+    Functions/InterpolationSplineBaseTests.cpp
+    Functions/PolynomialFunctionTests.cpp
+)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE
     RealFunctionOptimizationLib
@@ -22,8 +25,6 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
 
 include(GoogleTest)
 gtest_discover_tests(${PROJECT_NAME})
-
-add_test(NAME ${PROJECT_NAME} COMMAND ${PROJECT_NAME})
 
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_20)
 
