@@ -10,7 +10,7 @@ TEST(LineFunctionBaseTests, Constructor_WithEmptyParameters_ShouldThrowException
 
 TEST(LineFunctionBaseTests, Constructor_WithOneParameter_ShouldInitFreeMember)
 {
-    Vector parameters;
+    Vector parameters(1);
     parameters << 1.0;
 
     Functions::LineFunctionBase lineFunctionBase(parameters);
@@ -20,7 +20,7 @@ TEST(LineFunctionBaseTests, Constructor_WithOneParameter_ShouldInitFreeMember)
 
 TEST(LineFunctionBaseTests, Constructor_WithTwoParameters_ShouldInitOneCoefficientAndFreeMember)
 {
-    Vector parameters;
+    Vector parameters(2);
     parameters << 1.0, 2.0;
 
     Functions::LineFunctionBase lineFunctionBase(parameters);
@@ -31,7 +31,7 @@ TEST(LineFunctionBaseTests, Constructor_WithTwoParameters_ShouldInitOneCoefficie
 
 TEST(LineFunctionBaseTests, Constructor_WithManyParameters_ShouldInitCoefficientsAndFreeMember)
 {
-    Vector parameters;
+    Vector parameters(3);
     parameters << 1.0, 2.0, 3.0;
 
     Functions::LineFunctionBase lineFunctionBase(parameters);
