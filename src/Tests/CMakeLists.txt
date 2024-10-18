@@ -13,6 +13,11 @@ add_executable(${PROJECT_NAME} main.cpp
     Functions/LineFunctionTests.cpp
     Functions/InterpolationSplineBaseTests.cpp
     Functions/PolynomialFunctionTests.cpp
+    Functionals/L1NormDifferenceFunctionalTests.cpp
+    Functionals/MockFunctions.h
+    Functionals/LInfNormDifferenceFunctionalTests.cpp
+    Functionals/L2NormDifferenceFunctionalTests.cpp
+
 )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE
