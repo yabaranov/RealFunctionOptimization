@@ -9,15 +9,15 @@ LineFunction::InternalLineFunction::InternalLineFunction(const Vector& parameter
 
 Vector LineFunction::InternalLineFunction::Gradient(const Vector& point)
 {
-   return m_coefficients;
+    return m_coefficients.size() ? m_coefficients : Vector::Zero(1);
 }
 
 double LineFunction::InternalLineFunction::Value(const Vector& point)
 {
-   if(point.size() != m_coefficients.size())
+    if(point.size() != m_coefficients.size() && m_coefficients.size())
       throw std::runtime_error("The number of variables does not match the number of parameters");
 
-   return point.dot(m_coefficients) + m_freeMember;
+    return (m_coefficients.size() ? point.dot(m_coefficients) : 0.0) + m_freeMember;
 }
 
 std::unique_ptr<IFunction> LineFunction::Bind(const Vector& parameters)

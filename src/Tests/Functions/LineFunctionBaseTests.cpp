@@ -15,7 +15,7 @@ TEST(LineFunctionBaseTests, Constructor_WithOneParameter_ShouldInitFreeMember)
 
     Functions::LineFunctionBase lineFunctionBase(parameters);
 
-    ASSERT_EQ(lineFunctionBase.getFreeMember(), 1.0);
+    ASSERT_EQ(lineFunctionBase.GetFreeMember(), 1.0);
 }
 
 TEST(LineFunctionBaseTests, Constructor_WithTwoParameters_ShouldInitOneCoefficientAndFreeMember)
@@ -25,8 +25,8 @@ TEST(LineFunctionBaseTests, Constructor_WithTwoParameters_ShouldInitOneCoefficie
 
     Functions::LineFunctionBase lineFunctionBase(parameters);
 
-    ASSERT_EQ(lineFunctionBase.getCoefficient(0), 1.0);
-    ASSERT_EQ(lineFunctionBase.getFreeMember(), 2.0);
+    ASSERT_EQ(lineFunctionBase.GetCoefficient(0), 1.0);
+    ASSERT_EQ(lineFunctionBase.GetFreeMember(), 2.0);
 }
 
 TEST(LineFunctionBaseTests, Constructor_WithManyParameters_ShouldInitCoefficientsAndFreeMember)
@@ -36,7 +36,7 @@ TEST(LineFunctionBaseTests, Constructor_WithManyParameters_ShouldInitCoefficient
 
     Functions::LineFunctionBase lineFunctionBase(parameters);
 
-    ASSERT_EQ(lineFunctionBase.getCoefficient(0), 1.0);
-    ASSERT_EQ(lineFunctionBase.getCoefficient(1), 2.0);
-    ASSERT_EQ(lineFunctionBase.getFreeMember(), 3.0);
+    ASSERT_EQ(lineFunctionBase.GetCoefficient(0), 1.0);
+    ASSERT_EQ(lineFunctionBase.GetCoefficient(1), 2.0);
+    ASSERT_EQ(lineFunctionBase.GetFreeMember(), 3.0);
 }

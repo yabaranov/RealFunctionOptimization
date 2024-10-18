@@ -8,8 +8,8 @@ class LineFunctionBase
 public:
    LineFunctionBase(const Vector& parameters);
 
-   double getFreeMember() const;
-   double getCoefficient(size_t index) const;
+   double GetFreeMember() const;
+   double GetCoefficient(size_t index) const;
 
 protected:
    Vector m_coefficients;
