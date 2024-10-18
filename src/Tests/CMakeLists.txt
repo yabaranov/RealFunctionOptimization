@@ -10,7 +10,12 @@ FetchContent_MakeAvailable(googletest)
 
 add_executable(${PROJECT_NAME} main.cpp
     Functions/LineFunctionBaseTests.cpp
-    Functions/LineFunctionTests.cpp)
+    Functions/LineFunctionTests.cpp
+    Functionals/L1NormDifferenceFunctionalTests.cpp
+    Functionals/MockFunctions.h
+    Functionals/LInfNormDifferenceFunctionalTests.cpp
+    Functionals/L2NormDifferenceFunctionalTests.cpp
+)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE
     RealFunctionOptimizationLib
