@@ -47,9 +47,6 @@ Vector L2NormDifferenceFunctional::Gradient(IFunction& function)
 
 Vector L2NormDifferenceFunctional::Residual(IFunction& function)
 {
-   if(dynamic_cast<IDifferentiableFunction*>(&function) == nullptr)
-      throw std::runtime_error("Gradient accepts only IDifferentiableFunction objective functions");
-   
    Vector residual = Vector::Zero(m_functionValueTable.size());
    for (auto&& [index, pointValue] : std::views::enumerate(m_functionValueTable))
       residual[index] = function.Value(pointValue.point) - pointValue.value;

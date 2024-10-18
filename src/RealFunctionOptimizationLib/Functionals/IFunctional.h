@@ -12,22 +12,22 @@ namespace Functionals
     {
     public:
         virtual ~IFunctional() = default;
-        virtual double Value(Functions::IFunction& function);
+        virtual double Value(Functions::IFunction& function) = 0;
     };
 
     class IDifferentiableFunctional : public IFunctional
     {
     public:
         ~IDifferentiableFunctional() override = default;
-        virtual Vector Gradient(Functions::IFunction& function);
+        virtual Vector Gradient(Functions::IFunction& function) = 0;
     };
 
     class ILeastSquaresFunctional : public IFunctional
     {
     public:
         ~ILeastSquaresFunctional() override = default;
-        virtual Vector Residual(Functions::IFunction& function);
-        virtual Matrix Jacobian(Functions::IFunction& function);
+        virtual Vector Residual(Functions::IFunction& function) = 0;
+        virtual Matrix Jacobian(Functions::IFunction& function) = 0;
     };
 
     struct FunctionPointAndValue
