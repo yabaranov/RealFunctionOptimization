@@ -18,7 +18,7 @@ double LInfNormDifferenceFunctional::Value(IFunction& function)
    for(const auto& functionPointAndValue: m_functionValueTable)
    {
       auto difference = function.Value(functionPointAndValue.point) - functionPointAndValue.value;
-      max += std::max(std::abs(difference), max);
+      max = std::max(std::abs(difference), max);
    }
 
    return max;
