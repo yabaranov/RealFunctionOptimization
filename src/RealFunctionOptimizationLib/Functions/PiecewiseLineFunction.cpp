@@ -4,8 +4,6 @@ namespace Functions
 
 PiecewiseLineFunction::InternalPiecewiseLineFunction::InternalPiecewiseLineFunction(const Vector& parameters) : InterpolationSplineBase(parameters)
 {
-   if(parameters.size() < 2)
-      throw std::runtime_error("The number of parameters of the piecewise line function must be greater than or equal to 2");
 }
 
 Vector PiecewiseLineFunction::InternalPiecewiseLineFunction::Gradient(const Vector& point)
@@ -14,7 +12,7 @@ Vector PiecewiseLineFunction::InternalPiecewiseLineFunction::Gradient(const Vect
       throw std::runtime_error("The piecewise line function gradient can only be calculated at 1d point");
 
    auto argument = point[0];
-   auto&& [index1, index2] = FindIntervalOfArguments(argument);
+   auto&& [index1, index2] = FindIntervalOfArgument(argument);
 
    Vector gradient;
    gradient << (m_values(index2) - m_values(index1)) / (m_arguments(index2) - m_arguments(index1));
@@ -28,7 +26,7 @@ double PiecewiseLineFunction::InternalPiecewiseLineFunction::Value(const Vector&
       throw std::runtime_error("The piecewise line function can only be calculated at 1d point");
 
    auto argument = point[0];
-   auto&& [index1, index2] = FindIntervalOfArguments(argument);
+   auto&& [index1, index2] = FindIntervalOfArgument(argument);
 
    return m_values(index1) +
           (argument - m_arguments(index1)) * (m_values(index2) - m_values(index1)) / (m_arguments(index2) - m_arguments(index1));

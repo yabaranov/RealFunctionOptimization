@@ -5,8 +5,8 @@ namespace Functions
 
 InterpolationCubicSpline::InternalInterpolationCubicSpline::InternalInterpolationCubicSpline(const Vector& parameters) : InterpolationSplineBase(parameters)
 {
-   if(parameters.size() < 4)
-      throw std::runtime_error("The number of parameters of the interpolation cubic spline must be greater than or equal to 4");
+   if(parameters.size() < 8)
+      throw std::runtime_error("The number of parameters of the interpolation cubic spline must be greater than or equal to 8");
 }
 
 double InterpolationCubicSpline::InternalInterpolationCubicSpline::GetSplineCoefficient(size_t index)
@@ -51,7 +51,7 @@ double InterpolationCubicSpline::InternalInterpolationCubicSpline::Value(const V
       throw std::runtime_error("The polynomial can only be calculated at 1d point");
 
    auto argument = point[0];
-   auto&& [index1, index2] = FindIntervalOfArguments(argument);
+   auto&& [index1, index2] = FindIntervalOfArgument(argument);
 
    auto lengthInterval = m_arguments(index2) - m_arguments(index1);
    auto t = (argument - m_arguments(index1)) / lengthInterval;
