@@ -70,3 +70,29 @@ TEST_F(L1NormDifferenceFunctionalTests, Gradient_WithDifferentiableFunction_Shou
 
     ASSERT_EQ(functional->Gradient(mockDifferentiableFunction), Vector::Zero(2));
 }
+
+#include "AbstractFactories/FunctionAndFunctionalAbstractFactory.h"
+#include "Factories/FunctionFactories/LineFunctionFactory.h"
+#include "Factories/FunctionalFactories/L1NormDifferenceFunctionalFactory.h"
+#include "AbstractFactories/DifferentiableFunctionAndFunctionalFactory.h"
+
+TEST(TestFactory, Test1)
+{
+    std::vector<Functionals::FunctionPointAndValue> functionValueTable;
+    L1NormDifferenceFunctionalFactory l1NormDifferenceFunctionalFactory(functionValueTable);
+    LineFunctionFactory lineFunctionFactory;
+
+    DifferentiableFunctionAndFunctionalFactory differentiableFunctionAndFunctionalFactory(lineFunctionFactory, l1NormDifferenceFunctionalFactory);
+
+    auto code = [](const FunctionAndFunctionalAbstractFactory& abstractFactory)
+    {
+        auto parametricFunction = abstractFactory.CreateParametricFunction();
+        auto functional =  abstractFactory.CreateFunctional();
+    };
+
+    code(differentiableFunctionAndFunctionalFactory);
+
+    ASSERT_EQ(1, 1);
+}
+
+
