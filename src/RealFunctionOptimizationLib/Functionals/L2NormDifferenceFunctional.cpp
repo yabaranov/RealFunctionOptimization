@@ -65,8 +65,7 @@ Matrix L2NormDifferenceFunctional::Jacobian(IFunction& function)
    {
       Vector functionGradient = differentiableFunction.Gradient(pointValue.point);
 
-      auto difference = function.Value(pointValue.point) - pointValue.value;
-      jacobian.row(index) = 2 * difference * functionGradient;
+      jacobian.row(index) = functionGradient;
    }
    
    return jacobian;

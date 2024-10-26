@@ -109,31 +109,21 @@ TEST_F(L2NormDifferenceFunctionalTests, Jacobian_WithDifferentiableFunction_Shou
 {
     MockDifferentiableFunction mockDifferentiableFunction;
 
-    EXPECT_CALL(mockDifferentiableFunction, Value(functionValueTable[0].point))
-        .Times(1)
-        .WillOnce(Return(2.0));
-
     auto gradientInPoint1 = Vector::Constant(2, 1.0);
     EXPECT_CALL(mockDifferentiableFunction, Gradient(functionValueTable[0].point))
         .Times(1)
         .WillOnce(Return(gradientInPoint1));
-
-    EXPECT_CALL(mockDifferentiableFunction, Value(functionValueTable[1].point))
-        .Times(1)
-        .WillOnce(Return(4.0));
 
     auto gradientInPoint2 = Vector::Constant(2, 2.0);
     EXPECT_CALL(mockDifferentiableFunction, Gradient(functionValueTable[1].point))
         .Times(1)
         .WillOnce(Return(gradientInPoint2));
 
-    auto diff1 = std::abs(2.0 - functionValueTable[0].value);
-    auto diff2 = std::abs(4.0 - functionValueTable[1].value);
-
     auto expectedJacobian = Matrix(2, 2);
 
-    expectedJacobian << diff1 * gradientInPoint1[0], diff1 * gradientInPoint1[1],
-        diff2 * gradientInPoint2[0], diff2 * gradientInPoint2[1];
+    expectedJacobian <<
+        gradientInPoint1[0], gradientInPoint1[1],
+        gradientInPoint2[0], gradientInPoint2[1];
 
-    ASSERT_EQ(functional->Jacobian(mockDifferentiableFunction), 2 * expectedJacobian);
+    ASSERT_EQ(functional->Jacobian(mockDifferentiableFunction), expectedJacobian);
 }

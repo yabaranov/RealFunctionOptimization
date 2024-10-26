@@ -84,14 +84,14 @@ TEST(InternalLineFunctionTests, Gradient_WithCoefficients_ShouldReturnGradientRe
     Vector point2;
     auto gradient2 = differentiableFunction.Gradient(point2);
 
-    Vector expectedGradient(2);
-    expectedGradient << 1.0, 2.0;
+    Vector expectedGradient(3);
+    expectedGradient << 1.0, 2.0, 1.0;
 
     EXPECT_EQ(gradient1, expectedGradient);
     EXPECT_EQ(gradient2, expectedGradient);
 }
 
-TEST(InternalLineFunctionTests, Gradient_WithEmptyCoefficients_ShouldReturnZeroGradientRegardlessOfPoint)
+TEST(InternalLineFunctionTests, Gradient_WithEmptyCoefficients_ShouldReturnOneRegardlessOfPoint)
 {
     Vector parameters(1);
     parameters << 1.0;
@@ -109,7 +109,7 @@ TEST(InternalLineFunctionTests, Gradient_WithEmptyCoefficients_ShouldReturnZeroG
     auto gradient2 = differentiableFunction.Gradient(point2);
 
     Vector expectedGradient(1);
-    expectedGradient << 0.0;
+    expectedGradient << 1.0;
 
     EXPECT_EQ(gradient1, expectedGradient);
     EXPECT_EQ(gradient2, expectedGradient);
