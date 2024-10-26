@@ -6,9 +6,20 @@
 #include "Functionals/L2NormDifferenceFunctional.h"
 #include "Functionals/LInfNormDifferenceFunctional.h"
 
+static const Vector LINE_INITIAL_PARAMETERS = Vector::Constant(1, 0.5);
+static const Vector SPLINE_ARGUMENTS = Vector{{-1.0, 0.0, 1.0}};
+static const Vector SPLINE_INITIAL_PARAMETERS = Vector{{0.0, 0.0, 0.0}};
+static const Vector CUBIC_SPLINE_ARGUMENTS = Vector{{-1.0, 0.0, 1.0, 2.0}};
+static const Vector CUBIC_SPLINE_INITIAL_PARAMETERS = Vector{{0.0, 0.0, 0.0, 0.0}};
+
+template <typename FunctionalNorm>
 class FunctionalOptimizationTests : public testing::Test
 {
 public:
+    std::unique_ptr<FunctionalNorm> LineFunctional;
+    std::unique_ptr<FunctionalNorm> SplineFunctional;
+    std::unique_ptr<FunctionalNorm> CubicSplineFunctional;
+    
     uint32_t MaxIterations{100'000};
     double MaxResidual{1e-4};
     // y=x for line function
@@ -38,49 +49,15 @@ public:
         // real min is the midpoint
         return FunctionYIsXTable[1].value;
     }
-};
-
-class L1NormOptimizationTests : public FunctionalOptimizationTests
-{
-public:
-    std::unique_ptr<Functionals::L1NormDifferenceFunctional> LineFunctional;
-    std::unique_ptr<Functionals::L1NormDifferenceFunctional> SplineFunctional;
-    std::unique_ptr<Functionals::L1NormDifferenceFunctional> CubicSplineFunctional;
 
     void SetUp() override
     {
-        LineFunctional = std::make_unique<Functionals::L1NormDifferenceFunctional>(FunctionYIsXTable);
-        SplineFunctional = std::make_unique<Functionals::L1NormDifferenceFunctional>(FunctionYIsAbsXTable);
-        CubicSplineFunctional = std::make_unique<Functionals::L1NormDifferenceFunctional>(FunctionYIsZigZagXTable);
+        LineFunctional = std::make_unique<FunctionalNorm>(FunctionYIsXTable);
+        SplineFunctional = std::make_unique<FunctionalNorm>(FunctionYIsAbsXTable);
+        CubicSplineFunctional = std::make_unique<FunctionalNorm>(FunctionYIsZigZagXTable);
     }
 };
 
-class L2NormOptimizationTests : public FunctionalOptimizationTests
-{
-public:
-    std::unique_ptr<Functionals::L2NormDifferenceFunctional> LineFunctional;
-    std::unique_ptr<Functionals::L2NormDifferenceFunctional> SplineFunctional;
-    std::unique_ptr<Functionals::L2NormDifferenceFunctional> CubicSplineFunctional;
-    
-    void SetUp() override
-    {
-        LineFunctional = std::make_unique<Functionals::L2NormDifferenceFunctional>(FunctionYIsXTable);
-        SplineFunctional = std::make_unique<Functionals::L2NormDifferenceFunctional>(FunctionYIsAbsXTable);
-        CubicSplineFunctional = std::make_unique<Functionals::L2NormDifferenceFunctional>(FunctionYIsZigZagXTable);
-    }
-};
-
-class LInfNormOptimizationTests : public FunctionalOptimizationTests
-{
-public:
-    std::unique_ptr<Functionals::LInfNormDifferenceFunctional> LineFunctional;
-    std::unique_ptr<Functionals::LInfNormDifferenceFunctional> SplineFunctional;
-    std::unique_ptr<Functionals::LInfNormDifferenceFunctional> CubicSplineFunctional;
-
-    void SetUp() override
-    {
-        LineFunctional = std::make_unique<Functionals::LInfNormDifferenceFunctional>(FunctionYIsXTable);
-        SplineFunctional = std::make_unique<Functionals::LInfNormDifferenceFunctional>(FunctionYIsAbsXTable);
-        CubicSplineFunctional = std::make_unique<Functionals::LInfNormDifferenceFunctional>(FunctionYIsZigZagXTable);
-    }
-};
+using L1NormOptimizationTests = FunctionalOptimizationTests<Functionals::L1NormDifferenceFunctional>;
+using L2NormOptimizationTests = FunctionalOptimizationTests<Functionals::L2NormDifferenceFunctional>;
+using LInfNormOptimizationTests = FunctionalOptimizationTests<Functionals::LInfNormDifferenceFunctional>;

@@ -6,7 +6,6 @@
 #include "Optimizators/GaussNewtonOptimizator.h"
 
 static constexpr double TOLERANCE = 1e-1;
-static const Vector LINE_INITIAL_PARAMETERS = Vector::Constant(1, 0.5);
 
 class GaussNewtonL1NormOptimizationTests : public L1NormOptimizationTests{};
 class GaussNewtonL2NormOptimizationTests : public L2NormOptimizationTests{};
