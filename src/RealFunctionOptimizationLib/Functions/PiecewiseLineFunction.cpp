@@ -15,8 +15,9 @@ Vector PiecewiseLineFunction::InternalPiecewiseLineFunction::Gradient(const Vect
    auto argument = point[0];
    auto&& [index1, index2] = FindIntervalOfArgument(argument);
 
-   Vector gradient;
-   gradient << (m_values(index2) - m_values(index1)) / (m_arguments(index2) - m_arguments(index1));
+   Vector gradient = Vector::Zero(m_values.size());
+   gradient[index1] = (m_arguments(index2) - argument) / (m_arguments(index2) - m_arguments(index1));
+   gradient[index2] = (argument - m_arguments(index1)) / (m_arguments(index2) - m_arguments(index1));
 
    return gradient;
 }

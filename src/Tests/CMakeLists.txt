@@ -17,8 +17,8 @@ add_executable(${PROJECT_NAME} main.cpp
     Functionals/MockFunctions.h
     Functionals/LInfNormDifferenceFunctionalTests.cpp
     Functionals/L2NormDifferenceFunctionalTests.cpp
-
     Optimizators/GaussNewtonOptimizatorTests.cpp
+    Optimizators/GradientDescentOptimizatorTests.cpp
     Optimizators/MonteCarloOptimizatorTests.cpp
     Optimizators/OptimizatorsTestsCommon.h
 )

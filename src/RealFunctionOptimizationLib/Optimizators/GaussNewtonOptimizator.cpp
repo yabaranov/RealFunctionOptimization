@@ -23,6 +23,7 @@ Vector GaussNewtonOptimizator::Minimize(IFunctional& objective, IParametricFunct
 
     Vector parameters = initialParameters;
 
+    Vector prevDelta = Vector::Zero(parameters.size());
     for(uint32_t i = 0; i < m_maxIterations; i++)
     {
         Vector residual = leastSquaresFunctional.Residual(*function.Bind(parameters));
@@ -30,9 +31,14 @@ Vector GaussNewtonOptimizator::Minimize(IFunctional& objective, IParametricFunct
             break;
 
         Matrix jacobian = leastSquaresFunctional.Jacobian(*function.Bind(parameters));
-        Matrix hessianInverse = (jacobian.transpose() * jacobian).inverse();
-        
-        parameters = parameters - hessianInverse * (jacobian.transpose() * residual);
+        Matrix hessian = (jacobian.transpose() * jacobian);
+
+        Vector delta = hessian.colPivHouseholderQr().solve(jacobian.transpose() * residual);
+        if ((delta - prevDelta).norm() < 1e-7)
+            break;
+        prevDelta = delta;
+
+        parameters = parameters - delta;
     }
 
     return parameters;

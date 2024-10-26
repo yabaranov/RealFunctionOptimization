@@ -7,6 +7,7 @@
 namespace Functionals
 {
 using namespace Functions;
+namespace views = std::ranges::views;
 
 L2NormDifferenceFunctional::L2NormDifferenceFunctional(const std::vector<FunctionPointAndValue>& functionValueTable)
    : FunctionalBase(functionValueTable)
@@ -31,13 +32,15 @@ Vector L2NormDifferenceFunctional::Gradient(IFunction& function)
    if(dynamic_cast<IDifferentiableFunction*>(&function) == nullptr)
       throw std::runtime_error("Gradient accepts only IDifferentiableFunction objective functions");
    auto& differentiableFunction = dynamic_cast<IDifferentiableFunction&>(function);
-   
-   Vector gradient = Vector::Zero(m_functionValueTable.front().point.size());
 
-   for (const auto& functionPointAndValue : m_functionValueTable)
+   // IDifferentiableFunction does not include any method for getting the gradient dimensionality,
+   // so we have to write this garbage
+   Vector gradient = differentiableFunction.Gradient(m_functionValueTable.front().point);
+   gradient *= 2 * (function.Value(m_functionValueTable.front().point) - m_functionValueTable.front().value);
+
+   for (const auto& functionPointAndValue : m_functionValueTable | views::drop(1))
    {
       Vector functionGradient = differentiableFunction.Gradient(functionPointAndValue.point);
-
       auto difference = function.Value(functionPointAndValue.point) - functionPointAndValue.value;
       gradient += 2 * difference * functionGradient;
    }
@@ -60,10 +63,15 @@ Matrix L2NormDifferenceFunctional::Jacobian(IFunction& function)
       throw std::runtime_error("Gradient accepts only IDifferentiableFunction objective functions");
    auto& differentiableFunction = dynamic_cast<IDifferentiableFunction&>(function);
 
-   Matrix jacobian = Matrix::Zero(m_functionValueTable.size(), m_functionValueTable.front().point.size());
-   for (auto&& [index, pointValue] : std::views::enumerate(m_functionValueTable))
+   // IDifferentiableFunction does not include any method for getting the gradient dimensionality,
+   // so we have to write this garbage
+   Vector functionGradient = differentiableFunction.Gradient(m_functionValueTable.front().point);
+   Matrix jacobian = Matrix::Zero(m_functionValueTable.size(), functionGradient.size());
+   jacobian.row(0) = functionGradient;
+   
+   for (auto&& [index, pointValue] : std::views::enumerate(m_functionValueTable) | views::drop(1))
    {
-      Vector functionGradient = differentiableFunction.Gradient(pointValue.point);
+      functionGradient = differentiableFunction.Gradient(pointValue.point);
 
       jacobian.row(index) = functionGradient;
    }

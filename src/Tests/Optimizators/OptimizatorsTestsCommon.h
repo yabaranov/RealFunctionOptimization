@@ -8,7 +8,7 @@
 
 static const Vector LINE_INITIAL_PARAMETERS = Vector::Constant(1, 0.5);
 static const Vector SPLINE_ARGUMENTS = Vector{{-1.0, 0.0, 1.0}};
-static const Vector SPLINE_INITIAL_PARAMETERS = Vector{{0.0, 0.0, 0.0}};
+static const Vector SPLINE_INITIAL_PARAMETERS = Vector{{1.0, 1.0, 1.0}};
 static const Vector CUBIC_SPLINE_ARGUMENTS = Vector{{-1.0, 0.0, 1.0, 2.0}};
 static const Vector CUBIC_SPLINE_INITIAL_PARAMETERS = Vector{{0.0, 0.0, 0.0, 0.0}};
 
