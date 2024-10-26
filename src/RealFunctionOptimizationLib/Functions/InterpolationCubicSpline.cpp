@@ -1,5 +1,7 @@
 #include "InterpolationCubicSpline.h"
 
+#include <ranges>
+
 namespace Functions
 {
 InterpolationCubicSpline::InternalInterpolationCubicSpline::InternalInterpolationCubicSpline(const Vector& arguments, const Vector& parameters)
@@ -64,11 +66,11 @@ double InterpolationCubicSpline::InternalInterpolationCubicSpline::Value(const V
       [](double x, double h) {return h * (-x * x + x * x * x); },
    };
 
-   Vector basisFunctionValues;
-   for(auto& basisFunction: basisFunctions)
-      basisFunctionValues << basisFunction(t, lengthInterval);
+   Vector basisFunctionValues(basisFunctions.size());
+   for(auto&& [i, basisFunction]: std::ranges::views::enumerate(basisFunctions))
+      basisFunctionValues[i] = basisFunction(t, lengthInterval);
 
-   Vector weights;
+   Vector weights(basisFunctions.size());
    weights << m_values(index1), GetSplineCoefficient(index1), m_values(index2), GetSplineCoefficient(index2);
 
    return weights.dot(basisFunctionValues);

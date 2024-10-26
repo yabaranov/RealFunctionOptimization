@@ -32,7 +32,7 @@ Vector L2NormDifferenceFunctional::Gradient(IFunction& function)
       throw std::runtime_error("Gradient accepts only IDifferentiableFunction objective functions");
    auto& differentiableFunction = dynamic_cast<IDifferentiableFunction&>(function);
    
-   Vector gradient = Vector::Zero(m_functionValueTable.size());
+   Vector gradient = Vector::Zero(m_functionValueTable.front().point.size());
 
    for (const auto& functionPointAndValue : m_functionValueTable)
    {
@@ -60,7 +60,7 @@ Matrix L2NormDifferenceFunctional::Jacobian(IFunction& function)
       throw std::runtime_error("Gradient accepts only IDifferentiableFunction objective functions");
    auto& differentiableFunction = dynamic_cast<IDifferentiableFunction&>(function);
 
-   Matrix jacobian = Matrix::Zero(m_functionValueTable.size(), m_functionValueTable.size());
+   Matrix jacobian = Matrix::Zero(m_functionValueTable.size(), m_functionValueTable.front().point.size());
    for (auto&& [index, pointValue] : std::views::enumerate(m_functionValueTable))
    {
       Vector functionGradient = differentiableFunction.Gradient(pointValue.point);
