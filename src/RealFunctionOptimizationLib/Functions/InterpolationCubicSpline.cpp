@@ -1,12 +1,14 @@
 #include "InterpolationCubicSpline.h"
 
+#include <ranges>
+
 namespace Functions
 {
-
-InterpolationCubicSpline::InternalInterpolationCubicSpline::InternalInterpolationCubicSpline(const Vector& parameters) : InterpolationSplineBase(parameters)
+InterpolationCubicSpline::InternalInterpolationCubicSpline::InternalInterpolationCubicSpline(const Vector& arguments, const Vector& parameters)
+   : InterpolationSplineBase(arguments, parameters)
 {
-   if(parameters.size() < 8)
-      throw std::runtime_error("The number of parameters of the interpolation cubic spline must be greater than or equal to 8");
+   if(parameters.size() < 4)
+      throw std::runtime_error("The number of parameters of the interpolation cubic spline must be greater than or equal to 4");
 }
 
 double InterpolationCubicSpline::InternalInterpolationCubicSpline::GetSplineCoefficient(size_t index)
@@ -64,19 +66,23 @@ double InterpolationCubicSpline::InternalInterpolationCubicSpline::Value(const V
       [](double x, double h) {return h * (-x * x + x * x * x); },
    };
 
-   Vector basisFunctionValues;
-   for(auto& basisFunction: basisFunctions)
-      basisFunctionValues << basisFunction(t, lengthInterval);
+   Vector basisFunctionValues(basisFunctions.size());
+   for(auto&& [i, basisFunction]: std::ranges::views::enumerate(basisFunctions))
+      basisFunctionValues[i] = basisFunction(t, lengthInterval);
 
-   Vector weights;
+   Vector weights(basisFunctions.size());
    weights << m_values(index1), GetSplineCoefficient(index1), m_values(index2), GetSplineCoefficient(index2);
 
    return weights.dot(basisFunctionValues);
 }
 
-std::unique_ptr<IFunction> InterpolationCubicSpline::Bind(const Vector& parameters)
+InterpolationCubicSpline::InterpolationCubicSpline(const Vector& arguments)
+   : m_arguments(arguments)
 {
-   return std::make_unique<InternalInterpolationCubicSpline>(parameters);
 }
 
+std::unique_ptr<IFunction> InterpolationCubicSpline::Bind(const Vector& parameters)
+{
+   return std::make_unique<InternalInterpolationCubicSpline>(m_arguments, parameters);
+}
 }

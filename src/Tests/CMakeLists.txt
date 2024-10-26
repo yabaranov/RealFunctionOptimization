@@ -18,6 +18,9 @@ add_executable(${PROJECT_NAME} main.cpp
     Functionals/LInfNormDifferenceFunctionalTests.cpp
     Functionals/L2NormDifferenceFunctionalTests.cpp
 
+    Optimizators/GaussNewtonOptimizatorTests.cpp
+    Optimizators/MonteCarloOptimizatorTests.cpp
+    Optimizators/OptimizatorsTestsCommon.h
 )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE
@@ -32,6 +35,10 @@ include(GoogleTest)
 gtest_discover_tests(${PROJECT_NAME})
 
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_20)
+
+target_include_directories(${PROJECT_NAME}
+  PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}
+)
 
 if (MSVC)
     set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)

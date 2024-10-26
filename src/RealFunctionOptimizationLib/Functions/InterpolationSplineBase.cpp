@@ -1,25 +1,22 @@
 #include "InterpolationSplineBase.h"
+
 namespace Functions
 {
-
-InterpolationSplineBase::InterpolationSplineBase(const Vector& parameters)
+InterpolationSplineBase::InterpolationSplineBase(const Vector& arguments, const Vector& parameters)
 {
-   if(parameters.size() == 0)
-      throw std::runtime_error("The number of parameters of the function must be greater than 0");
+   if (arguments.size() != parameters.size())
+      throw std::runtime_error("The number of arguments does not match the number of parameters");
+   
+   if(parameters.size() < 2)
+      throw std::runtime_error("The number of parameters of the function must be no less than 2");
 
-   if(parameters.size() % 2 != 0)
-      throw std::runtime_error("The number of parameters of the spline function must be even");
+   m_arguments.resize(arguments.size());
+   m_values.resize(parameters.size());
 
-   if(parameters.size() < 4)
-      throw std::runtime_error("The number of parameters of the spline function must be greater than or equal to 4");
-
-   m_arguments.resize(parameters.size() / 2);
-   m_values.resize(parameters.size() / 2);
-
-   for(size_t i = 0; i < parameters.size(); i += 2)
+   for(size_t i = 0; i < parameters.size(); i++)
    {
-       m_arguments(i / 2) = parameters(i);
-       m_values(i / 2) = parameters(i + 1);
+      m_arguments(i) = arguments(i); 
+      m_values(i) = parameters(i); 
    }
 }
 
@@ -47,5 +44,4 @@ double InterpolationSplineBase::GetValue(size_t index) const
 {
     return m_values(index);
 }
-
 }

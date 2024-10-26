@@ -15,14 +15,14 @@ namespace Functionals
         virtual double Value(Functions::IFunction& function) = 0;
     };
 
-    class IDifferentiableFunctional : public IFunctional
+    class IDifferentiableFunctional : virtual public IFunctional
     {
     public:
         ~IDifferentiableFunctional() override = default;
         virtual Vector Gradient(Functions::IFunction& function) = 0;
     };
 
-    class ILeastSquaresFunctional : public IFunctional
+    class ILeastSquaresFunctional : virtual public IFunctional
     {
     public:
         ~ILeastSquaresFunctional() override = default;

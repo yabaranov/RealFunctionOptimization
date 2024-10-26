@@ -21,10 +21,10 @@ Vector MonteCarloOptimizator::Minimize(IFunctional& objective, IParametricFuncti
 
     std::vector<std::uniform_real_distribution<>> distributions;
     distributions.reserve(parameters.size());
-    for (uint32_t i = 0; i < distributions.size(); i++)
+    for (uint32_t i = 0; i < parameters.size(); i++)
         distributions.emplace_back(
-            minimumParameters ? (*minimumParameters)[i] : -std::numeric_limits<double>::infinity(),
-            maximumParameters ? (*maximumParameters)[i] :  std::numeric_limits<double>::infinity());
+            minimumParameters ? (*minimumParameters)[i] : -1.0f,
+            maximumParameters ? (*maximumParameters)[i] :  1.0f);
 
     double currentMin = objective.Value(*function.Bind(parameters));
 

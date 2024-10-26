@@ -1,8 +1,9 @@
 #include "PiecewiseLineFunction.h"
+
 namespace Functions
 {
-
-PiecewiseLineFunction::InternalPiecewiseLineFunction::InternalPiecewiseLineFunction(const Vector& parameters) : InterpolationSplineBase(parameters)
+PiecewiseLineFunction::InternalPiecewiseLineFunction::InternalPiecewiseLineFunction(const Vector& arguments, const Vector& parameters)
+   : InterpolationSplineBase(arguments, parameters)
 {
 }
 
@@ -32,9 +33,13 @@ double PiecewiseLineFunction::InternalPiecewiseLineFunction::Value(const Vector&
           (argument - m_arguments(index1)) * (m_values(index2) - m_values(index1)) / (m_arguments(index2) - m_arguments(index1));
 }
 
-std::unique_ptr<IFunction> PiecewiseLineFunction::Bind(const Vector& parameters)
+PiecewiseLineFunction::PiecewiseLineFunction(const Vector& arguments)
+   : m_arguments(arguments)
 {
-   return std::make_unique<InternalPiecewiseLineFunction>(parameters);
 }
 
+std::unique_ptr<IFunction> PiecewiseLineFunction::Bind(const Vector& parameters)
+{
+   return std::make_unique<InternalPiecewiseLineFunction>(m_arguments, parameters);
+}
 }

@@ -32,7 +32,7 @@ Vector GaussNewtonOptimizator::Minimize(IFunctional& objective, IParametricFunct
         Matrix jacobian = leastSquaresFunctional.Jacobian(*function.Bind(parameters));
         Matrix hessianInverse = (jacobian.transpose() * jacobian).inverse();
         
-        parameters = parameters - hessianInverse * jacobian.transpose() * residual;
+        parameters = parameters - hessianInverse * (jacobian.transpose() * residual);
     }
 
     return parameters;

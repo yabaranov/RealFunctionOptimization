@@ -2,7 +2,6 @@
 
 namespace Functions
 {
-
 LineFunctionBase::LineFunctionBase(const Vector& parameters)
 {
    if(parameters.size() == 0)
@@ -23,5 +22,4 @@ double LineFunctionBase::GetCoefficient(size_t index) const
 {
     return m_coefficients(index);
 }
-
 }

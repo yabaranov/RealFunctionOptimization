@@ -8,17 +8,19 @@ namespace Functions
 class InterpolationCubicSpline : public IParametricFunction
 {
 public:
-   InterpolationCubicSpline() = default;
+   InterpolationCubicSpline(const Vector& arguments);
    std::unique_ptr<IFunction> Bind(const Vector& parameters) override;
 
 private:
    class InternalInterpolationCubicSpline : public IFunction, public InterpolationSplineBase
    {
    public:
-      InternalInterpolationCubicSpline(const Vector& parameters);
+      InternalInterpolationCubicSpline(const Vector& arguments, const Vector& parameters);
       double Value(const Vector& point) override;
    private:
       double GetSplineCoefficient(size_t index);
    };
+
+   Vector m_arguments;
 };
 }
