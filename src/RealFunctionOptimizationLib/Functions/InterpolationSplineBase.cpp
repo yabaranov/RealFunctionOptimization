@@ -10,14 +10,8 @@ InterpolationSplineBase::InterpolationSplineBase(const Vector& arguments, const 
    if(parameters.size() < 2)
       throw std::runtime_error("The number of parameters of the function must be no less than 2");
 
-   m_arguments.resize(arguments.size());
-   m_values.resize(parameters.size());
-
-   for(size_t i = 0; i < parameters.size(); i++)
-   {
-      m_arguments(i) = arguments(i); 
-      m_values(i) = parameters(i); 
-   }
+   m_arguments = arguments;
+   m_values = parameters;
 }
 
 std::pair<size_t, size_t> InterpolationSplineBase::FindIntervalOfArgument(double argument)
