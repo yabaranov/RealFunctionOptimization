@@ -12,6 +12,7 @@ static constexpr double TOLERANCE = 1e-1;
 class MonteCarloL1NormOptimizationTests : public L1NormOptimizationTests{};
 class MonteCarloL2NormOptimizationTests : public L2NormOptimizationTests{};
 class MonteCarloLInfNormOptimizationTests : public LInfNormOptimizationTests{};
+class MonteCarloIntegralOptimizationTests : public IntegralFunctionalOptimizationTests{};
 
 using namespace Optimizators;
 using namespace Functions;
@@ -117,4 +118,16 @@ TEST_F(MonteCarloLInfNormOptimizationTests, Minimize_WithInterpolationCubicSplin
 
     for (uint32_t i = 0; i < parameters.size(); i++)
         EXPECT_NEAR(parameters[i], FunctionYIsZigZagXTable[i].value, TOLERANCE);
+}
+
+TEST_F(MonteCarloIntegralOptimizationTests, Minimize_WithIntegralFunctional_ShouldMinimize)
+{
+    std::unique_ptr<IOptimizator> optimizator =
+        std::make_unique<MonteCarloOptimizator>(MaxIterations, MaxResidual, SEED);
+
+    IntegralFunction function;
+    
+    Vector parameters = optimizator->Minimize(*Functional, function, INTEGRAL_PARAMETERS);
+
+    EXPECT_NEAR(parameters[0], GetExpectedMin(), TOLERANCE);
 }

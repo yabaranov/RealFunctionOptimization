@@ -11,6 +11,7 @@ static constexpr double TOLERANCE = 1e-1;
 class GaussNewtonL1NormOptimizationTests : public L1NormOptimizationTests{};
 class GaussNewtonL2NormOptimizationTests : public L2NormOptimizationTests{};
 class GaussNewtonLInfNormOptimizationTests : public LInfNormOptimizationTests{};
+class GaussNewtonIntegralOptimizationTests : public IntegralFunctionalOptimizationTests{};
 
 using namespace Optimizators;
 using namespace Functions;
@@ -100,4 +101,13 @@ TEST_F(GaussNewtonLInfNormOptimizationTests, Minimize_WithCubicSplineFunctionAnd
     InterpolationCubicSpline lineFunction{CUBIC_SPLINE_ARGUMENTS};
     
     ASSERT_THROW(optimizator->Minimize(*LineFunctional, lineFunction, CUBIC_SPLINE_INITIAL_PARAMETERS), std::runtime_error);
+}
+
+TEST_F(GaussNewtonIntegralOptimizationTests, Minimize_WithIntegralFunctional_ShouldThrowException)
+{
+    std::unique_ptr<IOptimizator> optimizator =
+        std::make_unique<GaussNewtonOptimizator>(MaxIterations, MaxResidual);
+    IntegralFunction function;
+    
+    ASSERT_THROW(optimizator->Minimize(*Functional, function, INTEGRAL_PARAMETERS), std::runtime_error);
 }
