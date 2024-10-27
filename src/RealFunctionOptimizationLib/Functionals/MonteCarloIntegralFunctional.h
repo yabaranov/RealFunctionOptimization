@@ -12,14 +12,12 @@ struct IntegralHyperBoxDomain
     Vector MaxParameters;
 };
     
-class MonteCarloIntegralFunctional : public IFunctional, public FunctionalBase
+class MonteCarloIntegralFunctional : public IFunctional
 {
 public:
     MonteCarloIntegralFunctional(const IntegralHyperBoxDomain& domain,
-        uint32_t samples, uint32_t seed = std::random_device{}(),
-        const std::vector<FunctionPointAndValue>& functionPointValues = {});
+        uint32_t samples, uint32_t seed = std::random_device{}());
     double Value(Functions::IFunction& function) override;
-
 private:
     IntegralHyperBoxDomain m_hyperBoxDomain{};
     uint32_t m_samples{};
