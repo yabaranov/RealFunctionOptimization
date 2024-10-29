@@ -4,10 +4,10 @@
 #include "Functions/InterpolationCubicSpline.h"
 #include "Functions/LineFunction.h"
 #include "Functions/PiecewiseLineFunction.h"
+#include "Functions/PolynomialFunction.h"
 #include "Optimizators/MonteCarloOptimizator.h"
 
 static constexpr uint32_t SEED = 0;
-static constexpr double TOLERANCE = 1e-1;
 
 class MonteCarloL1NormOptimizationTests : public L1NormOptimizationTests{};
 class MonteCarloL2NormOptimizationTests : public L2NormOptimizationTests{};
@@ -52,6 +52,18 @@ TEST_F(MonteCarloL1NormOptimizationTests, Minimize_WithInterpolationCubicSplineF
         EXPECT_NEAR(parameters[i], FunctionYIsZigZagXTable[i].value, TOLERANCE);
 }
 
+TEST_F(MonteCarloL1NormOptimizationTests, Minimize_WithPolynomialFunctionAndL1Functional_ShouldMinimize)
+{
+    std::unique_ptr<IOptimizator> optimizator =
+        std::make_unique<MonteCarloOptimizator>(MaxIterations, MaxResidual, SEED);
+
+    PolynomialFunction polynomialFunction;
+    Vector parameters = optimizator->Minimize(*PolynomialFunctional, polynomialFunction, POLYNOMIAL_INITIAL_PARAMETERS);
+
+    for (uint32_t i = 0; i < parameters.size(); i++)
+        EXPECT_NEAR(parameters[i], GetMinimizingPolynomialYIsSquareX(i), TOLERANCE);
+}
+
 TEST_F(MonteCarloL2NormOptimizationTests, Minimize_WithLineFunctionAndL2Functional_ShouldMinimize)
 {
     std::unique_ptr<IOptimizator> optimizator =
@@ -74,7 +86,7 @@ TEST_F(MonteCarloL2NormOptimizationTests, Minimize_WithPiecewiseLineFunctionAndL
         EXPECT_NEAR(parameters[i], FunctionYIsAbsXTable[i].value, TOLERANCE);
 }
 
-TEST_F(MonteCarloL2NormOptimizationTests, Minimize_WithInterpolationCubicSplineFunctionAndL1Functional_ShouldMinimize)
+TEST_F(MonteCarloL2NormOptimizationTests, Minimize_WithInterpolationCubicSplineFunctionAndL2Functional_ShouldMinimize)
 {
     std::unique_ptr<IOptimizator> optimizator =
         std::make_unique<MonteCarloOptimizator>(MaxIterations, MaxResidual, SEED);
@@ -84,6 +96,18 @@ TEST_F(MonteCarloL2NormOptimizationTests, Minimize_WithInterpolationCubicSplineF
 
     for (uint32_t i = 0; i < parameters.size(); i++)
         EXPECT_NEAR(parameters[i], FunctionYIsZigZagXTable[i].value, TOLERANCE);
+}
+
+TEST_F(MonteCarloL2NormOptimizationTests, Minimize_WithPolynomialFunctionAndL2Functional_ShouldMinimize)
+{
+    std::unique_ptr<IOptimizator> optimizator =
+        std::make_unique<MonteCarloOptimizator>(MaxIterations, MaxResidual, SEED);
+
+    PolynomialFunction polynomialFunction;
+    Vector parameters = optimizator->Minimize(*PolynomialFunctional, polynomialFunction, POLYNOMIAL_INITIAL_PARAMETERS);
+
+    for (uint32_t i = 0; i < parameters.size(); i++)
+        EXPECT_NEAR(parameters[i], GetMinimizingPolynomialYIsSquareX(i), TOLERANCE);
 }
 
 TEST_F(MonteCarloLInfNormOptimizationTests, Minimize_WithLineFunctionAndLInfFunctional_ShouldMinimize)
@@ -108,7 +132,7 @@ TEST_F(MonteCarloLInfNormOptimizationTests, Minimize_WithPiecewiseLineFunctionAn
         EXPECT_NEAR(parameters[i], FunctionYIsAbsXTable[i].value, TOLERANCE);
 }
 
-TEST_F(MonteCarloLInfNormOptimizationTests, Minimize_WithInterpolationCubicSplineFunctionAndL1Functional_ShouldMinimize)
+TEST_F(MonteCarloLInfNormOptimizationTests, Minimize_WithInterpolationCubicSplineFunctionAndLInfFunctional_ShouldMinimize)
 {
     std::unique_ptr<IOptimizator> optimizator =
         std::make_unique<MonteCarloOptimizator>(MaxIterations, MaxResidual, SEED);
@@ -118,6 +142,18 @@ TEST_F(MonteCarloLInfNormOptimizationTests, Minimize_WithInterpolationCubicSplin
 
     for (uint32_t i = 0; i < parameters.size(); i++)
         EXPECT_NEAR(parameters[i], FunctionYIsZigZagXTable[i].value, TOLERANCE);
+}
+
+TEST_F(MonteCarloLInfNormOptimizationTests, Minimize_WithPolynomialFunctionAndLInfFunctional_ShouldMinimize)
+{
+    std::unique_ptr<IOptimizator> optimizator =
+        std::make_unique<MonteCarloOptimizator>(MaxIterations, MaxResidual, SEED);
+
+    PolynomialFunction polynomialFunction;
+    Vector parameters = optimizator->Minimize(*PolynomialFunctional, polynomialFunction, POLYNOMIAL_INITIAL_PARAMETERS);
+
+    for (uint32_t i = 0; i < parameters.size(); i++)
+        EXPECT_NEAR(parameters[i], GetMinimizingPolynomialYIsSquareX(i), TOLERANCE);
 }
 
 TEST_F(MonteCarloIntegralOptimizationTests, Minimize_WithIntegralFunctional_ShouldMinimize)

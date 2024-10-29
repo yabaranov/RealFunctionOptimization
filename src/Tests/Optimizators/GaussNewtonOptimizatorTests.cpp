@@ -4,9 +4,8 @@
 #include "Functions/InterpolationCubicSpline.h"
 #include "Functions/LineFunction.h"
 #include "Functions/PiecewiseLineFunction.h"
+#include "Functions/PolynomialFunction.h"
 #include "Optimizators/GaussNewtonOptimizator.h"
-
-static constexpr double TOLERANCE = 1e-1;
 
 class GaussNewtonL1NormOptimizationTests : public L1NormOptimizationTests{};
 class GaussNewtonL2NormOptimizationTests : public L2NormOptimizationTests{};
@@ -44,6 +43,15 @@ TEST_F(GaussNewtonL1NormOptimizationTests, Minimize_WithCubicSplineFunctionAndL1
     ASSERT_THROW(optimizator->Minimize(*LineFunctional, lineFunction, CUBIC_SPLINE_INITIAL_PARAMETERS), std::runtime_error);
 }
 
+TEST_F(GaussNewtonL1NormOptimizationTests, Minimize_WithPolynomialFunctionAndL1Functional_ShouldThrowException)
+{
+    std::unique_ptr<IOptimizator> optimizator =
+        std::make_unique<GaussNewtonOptimizator>(MaxIterations, MaxResidual);
+    PolynomialFunction polynomialFunction;
+
+    ASSERT_THROW(optimizator->Minimize(*PolynomialFunctional, polynomialFunction, POLYNOMIAL_INITIAL_PARAMETERS), std::runtime_error);
+}
+
 TEST_F(GaussNewtonL2NormOptimizationTests, Minimize_WithLineFunctionAndL2Functional_ShouldMinimize)
 {
     std::unique_ptr<IOptimizator> optimizator =
@@ -76,6 +84,15 @@ TEST_F(GaussNewtonL2NormOptimizationTests, Minimize_WithInterpolationCubicSpline
     ASSERT_THROW(optimizator->Minimize(*LineFunctional, cubicSpline, CUBIC_SPLINE_INITIAL_PARAMETERS), std::runtime_error);
 }
 
+TEST_F(GaussNewtonL2NormOptimizationTests, Minimize_WithPolynomialFunctionAndL2Functional_ShouldMinimize)
+{
+    std::unique_ptr<IOptimizator> optimizator =
+        std::make_unique<GaussNewtonOptimizator>(MaxIterations, MaxResidual);
+    PolynomialFunction polynomialFunction;
+
+    ASSERT_THROW(optimizator->Minimize(*PolynomialFunctional, polynomialFunction, POLYNOMIAL_INITIAL_PARAMETERS), std::runtime_error);
+}
+
 TEST_F(GaussNewtonLInfNormOptimizationTests, Minimize_WithLineFunctionAndLInfFunctional_ShouldThrowException)
 {
     std::unique_ptr<IOptimizator> optimizator =
@@ -101,6 +118,14 @@ TEST_F(GaussNewtonLInfNormOptimizationTests, Minimize_WithCubicSplineFunctionAnd
     InterpolationCubicSpline lineFunction{CUBIC_SPLINE_ARGUMENTS};
     
     ASSERT_THROW(optimizator->Minimize(*LineFunctional, lineFunction, CUBIC_SPLINE_INITIAL_PARAMETERS), std::runtime_error);
+}
+
+TEST_F(GaussNewtonLInfNormOptimizationTests, Minimize_WithPolynomialFunctionAndLInfFunctional_ShouldThrowException)
+{
+    std::unique_ptr<IOptimizator> optimizator =
+        std::make_unique<GaussNewtonOptimizator>(MaxIterations, MaxResidual);
+    PolynomialFunction polynomialFunction;
+    ASSERT_THROW(optimizator->Minimize(*PolynomialFunctional, polynomialFunction, POLYNOMIAL_INITIAL_PARAMETERS), std::runtime_error);
 }
 
 TEST_F(GaussNewtonIntegralOptimizationTests, Minimize_WithIntegralFunctional_ShouldThrowException)

@@ -33,17 +33,17 @@ TEST(InternalPolynomialFunctionTests, Value_WithCoefficientsAndSizeOfPointNotEqu
 TEST(InternalPolynomialFunctionTests, Value_WithCoefficientsAndSizeOfPointEqualOne_ShouldReturnValue)
 {
     Vector parameters(3);
-    parameters << 1.0, 2.0, 3.0;
+    parameters << 1.0, 0.0, 0.0;
 
     Functions::PolynomialFunction polynomialFunction;
     auto function = polynomialFunction.Bind(parameters);
 
     Vector point(1);
-    point << 1.0;
+    point << 3.0;
 
     auto value = function->Value(point);
 
-    ASSERT_EQ(value, 1.0 * 1.0 + 2.0 * 1.0 + 3.0);
+    ASSERT_EQ(value, 9.0);
 }
 
 TEST(InternalPolynomialFunctionTests, Value_WithEmptyCoefficients_ShouldReturnFreeMemberRegardlessOfPoint)
