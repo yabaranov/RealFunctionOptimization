@@ -38,11 +38,11 @@ public:
     // y=(square of x) for polynomial
     const std::vector<Functionals::FunctionPointAndValue> FunctionYIsSquareXTable =
         {
-         {Vector::Constant(1, -1.0), 1.0},
-         {Vector::Constant(1,  0.0), 0.0},
-         {Vector::Constant(1,  1.0), 1.0},
-         {Vector::Constant(1,  2.0), 4.0},
-         };
+            {Vector::Constant(1, -1.0), 1.0},
+            {Vector::Constant(1,  0.0), 0.0},
+            {Vector::Constant(1,  1.0), 1.0},
+            {Vector::Constant(1,  2.0), 4.0},
+        };
     // y=|x| for line spline
     const std::vector<Functionals::FunctionPointAndValue> FunctionYIsAbsXTable =
         {
