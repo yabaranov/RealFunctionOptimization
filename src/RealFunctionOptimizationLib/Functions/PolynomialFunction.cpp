@@ -1,5 +1,4 @@
 #include "PolynomialFunction.h"
-#include <iostream>
 
 namespace Functions
 {
@@ -14,15 +13,15 @@ double PolynomialFunction::InternalPolynomialFunction::Value(const Vector& point
       throw std::runtime_error("The polynomial can only be calculated at 1d point");
 
    auto result = 0.0;
-   auto k = m_coefficients.size() - 1;
+   auto numberOfCoefficients = m_coefficients.size();
 
-   if(k >= 0)
+   if(numberOfCoefficients > 0)
    {
-      result = m_coefficients(k);
+      result = m_coefficients(0);
       auto argument = point(0);
       
-      for(; k > 0; k--)
-         result = m_coefficients(k - 1) + result * argument;
+      for(size_t i = 1; i < numberOfCoefficients; i++)
+         result = m_coefficients(i) + result * argument;
      
      result *= argument;
    }

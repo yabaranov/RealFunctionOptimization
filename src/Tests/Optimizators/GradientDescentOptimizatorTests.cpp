@@ -4,9 +4,8 @@
 #include "Functions/InterpolationCubicSpline.h"
 #include "Functions/LineFunction.h"
 #include "Functions/PiecewiseLineFunction.h"
+#include "Functions/PolynomialFunction.h"
 #include "Optimizators/GradientDescentOptimizator.h"
-
-static constexpr double TOLERANCE = 1e-1;
 
 class GradientDescentL1NormOptimizationTests : public L1NormOptimizationTests{};
 class GradientDescentL2NormOptimizationTests : public L2NormOptimizationTests{};
@@ -48,6 +47,15 @@ TEST_F(GradientDescentL1NormOptimizationTests, Minimize_WithCubicSplineFunctionA
     ASSERT_THROW(optimizator->Minimize(*LineFunctional, lineFunction, CUBIC_SPLINE_INITIAL_PARAMETERS), std::runtime_error);
 }
 
+TEST_F(GradientDescentL1NormOptimizationTests, Minimize_WithPolynomialFunctionAndL1Functional_ShouldThrowException)
+{
+    std::unique_ptr<IOptimizator> optimizator =
+        std::make_unique<GradientDescentOptimizator>(MaxIterations, MaxResidual);
+    PolynomialFunction polynomialFunction;
+
+    ASSERT_THROW(optimizator->Minimize(*PolynomialFunctional, polynomialFunction, POLYNOMIAL_INITIAL_PARAMETERS), std::runtime_error);
+}
+
 TEST_F(GradientDescentL2NormOptimizationTests, Minimize_WithLineFunctionAndL2Functional_ShouldMinimize)
 {
     std::unique_ptr<IOptimizator> optimizator =
@@ -80,6 +88,15 @@ TEST_F(GradientDescentL2NormOptimizationTests, Minimize_WithInterpolationCubicSp
     ASSERT_THROW(optimizator->Minimize(*LineFunctional, cubicSpline, CUBIC_SPLINE_INITIAL_PARAMETERS), std::runtime_error);
 }
 
+TEST_F(GradientDescentL2NormOptimizationTests, Minimize_WithPolynomialFunctionAndL2Functional_ShouldThrowException)
+{
+    std::unique_ptr<IOptimizator> optimizator =
+        std::make_unique<GradientDescentOptimizator>(MaxIterations, MaxResidual);
+    PolynomialFunction polynomialFunction;
+
+    ASSERT_THROW(optimizator->Minimize(*PolynomialFunctional, polynomialFunction, POLYNOMIAL_INITIAL_PARAMETERS), std::runtime_error);
+}
+
 TEST_F(GradientDescentLInfNormOptimizationTests, Minimize_WithLineFunctionAndLInfFunctional_ShouldThrowException)
 {
     std::unique_ptr<IOptimizator> optimizator =
@@ -105,6 +122,15 @@ TEST_F(GradientDescentLInfNormOptimizationTests, Minimize_WithCubicSplineFunctio
     InterpolationCubicSpline lineFunction{CUBIC_SPLINE_ARGUMENTS};
     
     ASSERT_THROW(optimizator->Minimize(*LineFunctional, lineFunction, CUBIC_SPLINE_INITIAL_PARAMETERS), std::runtime_error);
+}
+
+TEST_F(GradientDescentLInfNormOptimizationTests, Minimize_WithPolynomialFunctionAndLInfFunctional_ShouldThrowException)
+{
+    std::unique_ptr<IOptimizator> optimizator =
+        std::make_unique<GradientDescentOptimizator>(MaxIterations, MaxResidual);
+    PolynomialFunction polynomialFunction;
+
+    ASSERT_THROW(optimizator->Minimize(*PolynomialFunctional, polynomialFunction, POLYNOMIAL_INITIAL_PARAMETERS), std::runtime_error);
 }
 
 TEST_F(GradientDescentIntegralOptimizationTests, Minimize_WithIntegralFunctional_ShouldThrowException)

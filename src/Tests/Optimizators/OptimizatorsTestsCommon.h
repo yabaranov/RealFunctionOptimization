@@ -8,7 +8,10 @@
 #include "Functionals/MonteCarloIntegralFunctional.h"
 #include "Functions/IFunction.h"
 
+static constexpr double TOLERANCE = 1e-1;
+
 static const Vector LINE_INITIAL_PARAMETERS = Vector::Constant(1, 0.5);
+static const Vector POLYNOMIAL_INITIAL_PARAMETERS = Vector::Constant(3, 0.5);
 static const Vector SPLINE_ARGUMENTS = Vector{{-1.0, 0.0, 1.0}};
 static const Vector SPLINE_INITIAL_PARAMETERS = Vector{{1.0, 1.0, 1.0}};
 static const Vector CUBIC_SPLINE_ARGUMENTS = Vector{{-1.0, 0.0, 1.0, 2.0}};
@@ -21,6 +24,7 @@ public:
     std::unique_ptr<FunctionalNorm> LineFunctional;
     std::unique_ptr<FunctionalNorm> SplineFunctional;
     std::unique_ptr<FunctionalNorm> CubicSplineFunctional;
+    std::unique_ptr<FunctionalNorm> PolynomialFunctional;
     
     uint32_t MaxIterations{100'000};
     double MaxResidual{1e-4};
@@ -31,6 +35,14 @@ public:
             {Vector::Constant(1,  0.0),  0.0},
             {Vector::Constant(1,  1.0),  1.0},
         };
+    // y=(square of x) for polynomial
+    const std::vector<Functionals::FunctionPointAndValue> FunctionYIsSquareXTable =
+        {
+            {Vector::Constant(1, -1.0), 1.0},
+            {Vector::Constant(1,  0.0), 0.0},
+            {Vector::Constant(1,  1.0), 1.0},
+            {Vector::Constant(1,  2.0), 4.0},
+        };
     // y=|x| for line spline
     const std::vector<Functionals::FunctionPointAndValue> FunctionYIsAbsXTable =
         {
@@ -38,7 +50,7 @@ public:
             {Vector::Constant(1,  0.0), 0.0},
             {Vector::Constant(1,  1.0), 1.0},
         };
-    // y=(zigzag of x) for line spline    ->    /\/
+    // y=(zigzag of x) for cubic spline    ->    /\/
     const std::vector<Functionals::FunctionPointAndValue> FunctionYIsZigZagXTable =
         {
             {Vector::Constant(1, -1.0), 0.5},
@@ -46,17 +58,25 @@ public:
             {Vector::Constant(1,  1.0), 0.5},
             {Vector::Constant(1,  2.0), 0.0},
         };
+
     double GetMinimizingLineYIsX() const
     {
         // real min is the midpoint
         return FunctionYIsXTable[1].value;
     }
 
+    double GetMinimizingPolynomialYIsSquareX(uint32_t index) const
+    {
+        static const Vector TRUE_POLYNOMIAL_PARAMETERS = Vector{{1.0, 0.0, 0.0}};
+        return TRUE_POLYNOMIAL_PARAMETERS[index];
+    }
+
     void SetUp() override
     {
         LineFunctional = std::make_unique<FunctionalNorm>(FunctionYIsXTable);
+        PolynomialFunctional = std::make_unique<FunctionalNorm>(FunctionYIsSquareXTable);
         SplineFunctional = std::make_unique<FunctionalNorm>(FunctionYIsAbsXTable);
-        CubicSplineFunctional = std::make_unique<FunctionalNorm>(FunctionYIsZigZagXTable);
+        CubicSplineFunctional = std::make_unique<FunctionalNorm>(FunctionYIsZigZagXTable);      
     }
 };
 

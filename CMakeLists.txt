@@ -9,3 +9,7 @@ enable_testing()
 
 add_subdirectory(src/RealFunctionOptimizationLib)
 add_subdirectory(src/Tests)
+
+if (MSVC)
+    set_property(DIRECTORY ${PROJECT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT Test)
+endif()
