@@ -5,20 +5,12 @@
 
 namespace Functions
 {
-class LineFunction : public IParametricFunction
+class LineFunction : public IDifferentiableFunction, public LineFunctionBase
 {
 public:
-   LineFunction() = default;
-   std::unique_ptr<IFunction> Bind(const Vector& parameters) override;
-
-private:
-   class InternalLineFunction : public IDifferentiableFunction, public LineFunctionBase
-   {
-   public:
-      InternalLineFunction(const Vector& parameters);
-      Vector Gradient(const Vector& point) override;
-      double Value(const Vector& point) override;
-   };
+   LineFunction(const Vector& parameters);
+   Vector Gradient(const Vector& point) override;
+   double Value(const Vector& point) override;
 };
 }
 

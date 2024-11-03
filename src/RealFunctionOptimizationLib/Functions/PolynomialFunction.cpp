@@ -2,12 +2,11 @@
 
 namespace Functions
 {
-
-PolynomialFunction::InternalPolynomialFunction::InternalPolynomialFunction(const Vector& parameters) : LineFunctionBase(parameters)
+PolynomialFunction::PolynomialFunction(const Vector& parameters) : LineFunctionBase(parameters)
 {
 }
 
-double PolynomialFunction::InternalPolynomialFunction::Value(const Vector& point)
+double PolynomialFunction::Value(const Vector& point)
 {
    if(point.size() != 1 && m_coefficients.size())
       throw std::runtime_error("The polynomial can only be calculated at 1d point");
@@ -28,10 +27,4 @@ double PolynomialFunction::InternalPolynomialFunction::Value(const Vector& point
 
    return result + m_freeMember;
 }
-
-std::unique_ptr<IFunction> PolynomialFunction::Bind(const Vector& parameters)
-{
-   return std::make_unique<InternalPolynomialFunction>(parameters);
-}
-
 }

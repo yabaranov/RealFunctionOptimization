@@ -84,7 +84,6 @@ using L1NormOptimizationTests = FunctionalOptimizationTests<Functionals::L1NormD
 using L2NormOptimizationTests = FunctionalOptimizationTests<Functionals::L2NormDifferenceFunctional>;
 using LInfNormOptimizationTests = FunctionalOptimizationTests<Functionals::LInfNormDifferenceFunctional>;
 
-
 static const Vector INTEGRAL_DOMAIN_MIN = Vector{{0.0}};
 static const Vector INTEGRAL_DOMAIN_MAX = Vector{{1.0}};
 static const uint32_t INTEGRAL_SAMPLES = 1'000;
@@ -95,27 +94,28 @@ class IntegralFunctionalOptimizationTests : public testing::Test
 {
 public:
     // function is (x^2 - a)^2, where a is a parameter
-    class IntegralFunction : public Functions::IParametricFunction
+    class IntegralFunction : public Functions::IFunction
     {
     public:
-        std::unique_ptr<Functions::IFunction> Bind(const Vector& parameters) override
+        IntegralFunction(const Vector& parameters) : m_parameters(parameters) {}
+        double Value(const Vector& point) override
         {
-            return std::make_unique<InternalIntegralFunction>(parameters);
+            double val = point[0] * point[0] - m_parameters[0];
+            return val * val;
         }
     private:
-        class InternalIntegralFunction : public Functions::IFunction
-        {
-        public:
-            InternalIntegralFunction(const Vector& parameters) : m_parameters(parameters) {}
-            double Value(const Vector& point) override
-            {
-                double val = point[0] * point[0] - m_parameters[0];
-                return val * val;
-            }
-        private:
-            Vector m_parameters;
-        };
+        Vector m_parameters;
     };
+
+    class IntegralFunctionFactory
+    {
+    public:
+        std::unique_ptr<Functions::IFunction> CreateFunction(const Vector& parameters) const
+        {
+            return std::make_unique<IntegralFunction>(parameters);
+        }
+    };
+
 public:
     uint32_t MaxIterations{100'000};
     double MaxResidual{1e-4};

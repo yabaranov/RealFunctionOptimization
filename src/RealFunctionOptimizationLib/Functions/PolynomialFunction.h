@@ -5,18 +5,10 @@
 
 namespace Functions
 {
-class PolynomialFunction : public IParametricFunction
+class PolynomialFunction : public IFunction, public LineFunctionBase
 {
 public:
-   PolynomialFunction() = default;
-   std::unique_ptr<IFunction> Bind(const Vector& parameters) override;
-
-private:
-   class InternalPolynomialFunction : public IFunction, public LineFunctionBase
-   {
-   public:
-      InternalPolynomialFunction(const Vector& parameters);
-      double Value(const Vector& point) override;
-   };
+   PolynomialFunction(const Vector& parameters);
+   double Value(const Vector& point) override;
 };
 }

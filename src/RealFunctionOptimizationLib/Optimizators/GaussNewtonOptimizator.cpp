@@ -2,35 +2,28 @@
 
 #include "Functionals/IFunctional.h"
 #include "Functions/IFunction.h"
+#include "Functions/Factories/IDifferentiableFunctionFactory.h"
 
 namespace Optimizators
 {
 using namespace Functions;
 using namespace Functionals;
 
-GaussNewtonOptimizator::GaussNewtonOptimizator(uint32_t maxIterations, double maxResidual)
-    : OptimizatorBase(maxIterations, maxResidual)
+Vector GaussNewtonOptimizator::Minimize(const Vector& initialParameters, Vector* minimumParameters, Vector* maximumParameters)
 {
-}
-
-Vector GaussNewtonOptimizator::Minimize(IFunctional& objective, IParametricFunction& function,
-    const Vector& initialParameters, Vector* minimumParameters, Vector* maximumParameters)
-{
-    if (dynamic_cast<ILeastSquaresFunctional*>(&objective) == nullptr)
-        throw std::runtime_error("GaussNewtonOptimizator accepts only ILeastSquaresFunctional objective functions");
-
-    auto& leastSquaresFunctional = dynamic_cast<ILeastSquaresFunctional&>(objective);
-
     Vector parameters = initialParameters;
 
     Vector prevDelta = Vector::Zero(parameters.size());
     for(uint32_t i = 0; i < m_maxIterations; i++)
     {
-        Vector residual = leastSquaresFunctional.Residual(*function.Bind(parameters));
+        auto temp = m_differentiableFunctionFactory->CreateFunction(parameters);
+
+        auto g = temp->Value(Vector{{5.0}});
+        Vector residual = m_leastSquaresFunctional->Residual(dynamic_cast<IDifferentiableFunction&>(*m_differentiableFunctionFactory->CreateFunction(parameters)));
         if (residual.norm() < m_maxResidual)
             break;
 
-        Matrix jacobian = leastSquaresFunctional.Jacobian(*function.Bind(parameters));
+        Matrix jacobian = m_leastSquaresFunctional->Jacobian(dynamic_cast<IDifferentiableFunction&>(*m_differentiableFunctionFactory->CreateFunction(parameters)));
         Matrix hessian = (jacobian.transpose() * jacobian);
 
         Vector delta = hessian.colPivHouseholderQr().solve(jacobian.transpose() * residual);
@@ -42,5 +35,15 @@ Vector GaussNewtonOptimizator::Minimize(IFunctional& objective, IParametricFunct
     }
 
     return parameters;
+}
+
+void GaussNewtonOptimizator::setFunctional(std::unique_ptr<Functionals::ILeastSquaresFunctional> leastSquaresFunctional)
+{
+    m_leastSquaresFunctional = std::move(leastSquaresFunctional);
+}
+
+void GaussNewtonOptimizator::setFunctionFactory(std::unique_ptr<Functions::IDifferentiableFunctionFactory> differentiableFunctionFactory)
+{
+    m_differentiableFunctionFactory = std::move(differentiableFunctionFactory);
 }
 }

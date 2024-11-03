@@ -4,14 +4,14 @@
 
 namespace Functions
 {
-InterpolationCubicSpline::InternalInterpolationCubicSpline::InternalInterpolationCubicSpline(const Vector& arguments, const Vector& parameters)
+InterpolationCubicSpline::InterpolationCubicSpline(const Vector& arguments, const Vector& parameters)
    : InterpolationSplineBase(arguments, parameters)
 {
    if(parameters.size() < 4)
       throw std::runtime_error("The number of parameters of the interpolation cubic spline must be greater than or equal to 4");
 }
 
-double InterpolationCubicSpline::InternalInterpolationCubicSpline::GetSplineCoefficient(size_t index)
+double InterpolationCubicSpline::GetSplineCoefficient(size_t index)
 {
    auto splineCoefficient = 0.0;
    auto n = m_arguments.size();
@@ -47,7 +47,7 @@ double InterpolationCubicSpline::InternalInterpolationCubicSpline::GetSplineCoef
    return splineCoefficient;
 }
 
-double InterpolationCubicSpline::InternalInterpolationCubicSpline::Value(const Vector& point)
+double InterpolationCubicSpline::Value(const Vector& point)
 {
    if(point.size() != 1)
       throw std::runtime_error("The polynomial can only be calculated at 1d point");
@@ -74,15 +74,5 @@ double InterpolationCubicSpline::InternalInterpolationCubicSpline::Value(const V
    weights << m_values(index1), GetSplineCoefficient(index1), m_values(index2), GetSplineCoefficient(index2);
 
    return weights.dot(basisFunctionValues);
-}
-
-InterpolationCubicSpline::InterpolationCubicSpline(const Vector& arguments)
-   : m_arguments(arguments)
-{
-}
-
-std::unique_ptr<IFunction> InterpolationCubicSpline::Bind(const Vector& parameters)
-{
-   return std::make_unique<InternalInterpolationCubicSpline>(m_arguments, parameters);
 }
 }

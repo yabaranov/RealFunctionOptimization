@@ -3,7 +3,12 @@
 
 namespace Functionals
 {
-    class IDifferentiableFunctional;
+class IDifferentiableFunctional;
+}
+
+namespace Functions
+{
+class IDifferentiableFunctionFactory;
 }
 
 namespace Optimizators
@@ -11,11 +16,15 @@ namespace Optimizators
 class GradientDescentOptimizator : public IOptimizator, public OptimizatorBase
 {
 public:
-    GradientDescentOptimizator(uint32_t maxIterations, double maxResidual);
-    Vector Minimize(Functionals::IFunctional& objective, Functions::IParametricFunction& function,
-        const Vector& initialParameters, Vector* minimumParameters, Vector* maximumParameters) override;
+    GradientDescentOptimizator() = default;
+    Vector Minimize(const Vector& initialParameters, Vector* minimumParameters, Vector* maximumParameters) override;
+    void setFunctional(std::unique_ptr<Functionals::IDifferentiableFunctional> differentiableFunctional);
+    void setFunctionFactory(std::unique_ptr<Functions::IDifferentiableFunctionFactory> differentiableFunctionFactory);
+
 private:
-    double OneDOptimization(Functionals::IDifferentiableFunctional& objective, Functions::IParametricFunction& function,
+    std::unique_ptr<Functionals::IDifferentiableFunctional> m_differentiableFunctional;
+    std::unique_ptr<Functions::IDifferentiableFunctionFactory> m_differentiableFunctionFactory;
+    double OneDOptimization(Functionals::IDifferentiableFunctional& objective, Functions::IDifferentiableFunctionFactory& differentiablefunctionFactory,
         const Vector& parameters, const Vector& gradient);
 };
 }

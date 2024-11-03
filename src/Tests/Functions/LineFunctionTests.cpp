@@ -1,30 +1,12 @@
 #include <gtest/gtest.h>
-#include "Functions/LineFunction.h"
+#include "Functions/Factories/LineFunctionFactory.h"
 
-TEST(LineFunctionTests, Bind_WithValidParameters_ShouldReturnUniquePtrToIFunctionAndCastToIDifferentiableFunctionAndLineFunctionBase)
+TEST(LineFunctionTests, Value_WithCoefficientsAndSizeOfPointMismatchNumberOfCoefficients_ShouldThrowException)
 {
     Vector parameters(3);
     parameters << 1.0, 2.0, 3.0;
 
-    Functions::LineFunction lineFunction;
-    std::unique_ptr<Functions::IFunction> function = lineFunction.Bind(parameters);
-
-    ASSERT_TRUE(function != nullptr);
-
-    auto differentiableFunction = dynamic_cast<Functions::IDifferentiableFunction*>(function.get());
-    auto lineFunctionBase = dynamic_cast<Functions::LineFunctionBase*>(function.get());
-
-    EXPECT_TRUE(differentiableFunction != nullptr);
-    EXPECT_TRUE(lineFunctionBase != nullptr);
-}
-
-TEST(InternalLineFunctionTests, Value_WithCoefficientsAndSizeOfPointMismatchNumberOfCoefficients_ShouldThrowException)
-{
-    Vector parameters(3);
-    parameters << 1.0, 2.0, 3.0;
-
-    Functions::LineFunction lineFunction;
-    auto function = lineFunction.Bind(parameters);
+    auto function = Functions::LineFunctionFactory().CreateFunction(parameters);
 
     Vector point(3);
     point << 1.0, 2.0, 3.0;
@@ -32,13 +14,12 @@ TEST(InternalLineFunctionTests, Value_WithCoefficientsAndSizeOfPointMismatchNumb
     ASSERT_THROW(function->Value(point), std::runtime_error);
 }
 
-TEST(InternalLineFunctionTests, Value_WithEmptyCoefficients_ShouldReturnFreeMemberRegardlessOfPoint)
+TEST(LineFunctionTests, Value_WithEmptyCoefficients_ShouldReturnFreeMemberRegardlessOfPoint)
 {
     Vector parameters(1);
     parameters << 1.0;
 
-    Functions::LineFunction lineFunction;
-    auto function = lineFunction.Bind(parameters);
+    auto function = Functions::LineFunctionFactory().CreateFunction(parameters);
 
     Vector point1(3);
     point1 << 1.0, 2.0, 3.0;
@@ -51,13 +32,12 @@ TEST(InternalLineFunctionTests, Value_WithEmptyCoefficients_ShouldReturnFreeMemb
     EXPECT_EQ(value2, 1.0);
 }
 
-TEST(InternalLineFunctionTests, Value_WithCoefficients_ShouldReturnFunctionValue)
+TEST(LineFunctionTests, Value_WithCoefficients_ShouldReturnFunctionValue)
 {
     Vector parameters(3);
     parameters << 1.0, 2.0, 3.0;
 
-    Functions::LineFunction lineFunction;
-    auto function = lineFunction.Bind(parameters);
+    auto function = Functions::LineFunctionFactory().CreateFunction(parameters);
 
     Vector point(2);
     point << 1.0, 2.0;
@@ -67,13 +47,12 @@ TEST(InternalLineFunctionTests, Value_WithCoefficients_ShouldReturnFunctionValue
     ASSERT_EQ(value, 1.0 * 1.0 + 2.0 * 2.0 + 3.0);
 }
 
-TEST(InternalLineFunctionTests, Gradient_WithCoefficients_ShouldReturnGradientRegardlessOfPoint)
+TEST(LineFunctionTests, Gradient_WithCoefficients_ShouldReturnGradientRegardlessOfPoint)
 {
     Vector parameters(3);
     parameters << 1.0, 2.0, 3.0;
 
-    Functions::LineFunction lineFunction;
-    auto function = lineFunction.Bind(parameters);
+    auto function = Functions::LineFunctionFactory().CreateFunction(parameters);
 
     auto& differentiableFunction = dynamic_cast<Functions::IDifferentiableFunction&>(*function);
 
@@ -91,13 +70,12 @@ TEST(InternalLineFunctionTests, Gradient_WithCoefficients_ShouldReturnGradientRe
     EXPECT_EQ(gradient2, expectedGradient);
 }
 
-TEST(InternalLineFunctionTests, Gradient_WithEmptyCoefficients_ShouldReturnOneRegardlessOfPoint)
+TEST(LineFunctionTests, Gradient_WithEmptyCoefficients_ShouldReturnOneRegardlessOfPoint)
 {
     Vector parameters(1);
     parameters << 1.0;
 
-    Functions::LineFunction lineFunction;
-    auto function = lineFunction.Bind(parameters);
+    auto function = Functions::LineFunctionFactory().CreateFunction(parameters);
 
     auto& differentiableFunction = dynamic_cast<Functions::IDifferentiableFunction&>(*function);
 

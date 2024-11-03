@@ -2,19 +2,14 @@
 
 #include "Functionals/IFunctional.h"
 #include "Functions/IFunction.h"
+#include "Functions/Factories/IFunctionFactory.h"
 
 namespace Optimizators
 {
 using namespace Functions;
 using namespace Functionals;
 
-MonteCarloOptimizator::MonteCarloOptimizator(uint32_t maxIterations, double maxResidual, uint32_t seed)
-    : OptimizatorBase(maxIterations, maxResidual), m_randomNumberGenerator(seed)
-{
-}
-
-Vector MonteCarloOptimizator::Minimize(IFunctional& objective, IParametricFunction& function,
-    const Vector& initialParameters, Vector* minimumParameters, Vector* maximumParameters)
+Vector MonteCarloOptimizator::Minimize(const Vector& initialParameters, Vector* minimumParameters, Vector* maximumParameters)
 {
     Vector parameters = initialParameters;
     Vector minParameters = initialParameters;
@@ -26,7 +21,7 @@ Vector MonteCarloOptimizator::Minimize(IFunctional& objective, IParametricFuncti
             minimumParameters ? (*minimumParameters)[i] : -1.0f,
             maximumParameters ? (*maximumParameters)[i] :  1.0f);
 
-    double currentMin = objective.Value(*function.Bind(parameters));
+    double currentMin = m_functional->Value(*m_functionFactory->CreateFunction(parameters));
 
     for (uint32_t i = 0; i < m_maxIterations; i++)
     {
@@ -34,7 +29,7 @@ Vector MonteCarloOptimizator::Minimize(IFunctional& objective, IParametricFuncti
         for (uint32_t paramIndex = 0; paramIndex < parameters.size(); paramIndex++)
             parameters[paramIndex] = distributions[paramIndex](m_randomNumberGenerator);
 
-        const double val = objective.Value(*function.Bind(parameters));
+        const double val = m_functional->Value(*m_functionFactory->CreateFunction(parameters));
         if (val < currentMin)
         {
             currentMin = val;
@@ -46,5 +41,20 @@ Vector MonteCarloOptimizator::Minimize(IFunctional& objective, IParametricFuncti
     }
 
     return minParameters;
+}
+
+void MonteCarloOptimizator::setFunctional(std::unique_ptr<Functionals::IFunctional> functional)
+{
+    m_functional = std::move(functional);
+}
+
+void MonteCarloOptimizator::setFunctionFactory(std::unique_ptr<Functions::IFunctionFactory> functionFactory)
+{
+    m_functionFactory = std::move(functionFactory);
+}
+
+void MonteCarloOptimizator::setSeed(uint32_t seed)
+{
+    m_randomNumberGenerator.seed(seed);
 }
 }

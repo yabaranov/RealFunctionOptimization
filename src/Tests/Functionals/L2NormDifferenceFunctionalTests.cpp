@@ -44,13 +44,6 @@ TEST_F(L2NormDifferenceFunctionalTests, Value_WithFunction_ShouldReturnValue)
     ASSERT_EQ(functional->Value(mockFunction), diff1 * diff1 + diff2 * diff2);
 }
 
-TEST_F(L2NormDifferenceFunctionalTests, Gradient_WithFunction_ShouldThrowException)
-{
-    MockFunction mockFunction;
-
-    ASSERT_THROW(functional->Gradient(mockFunction), std::runtime_error);
-}
-
 TEST_F(L2NormDifferenceFunctionalTests, Gradient_WithDifferentiableFunction_ShouldReturnGradient)
 {
     MockDifferentiableFunction mockDifferentiableFunction;
@@ -81,13 +74,13 @@ TEST_F(L2NormDifferenceFunctionalTests, Gradient_WithDifferentiableFunction_Shou
 
 TEST_F(L2NormDifferenceFunctionalTests, Residual_WithFunction_ShouldReturnResidual)
 {
-    MockFunction mockFunction;
+    MockDifferentiableFunction mockDifferentiableFunction;
 
-    EXPECT_CALL(mockFunction, Value(functionValueTable[0].point))
+    EXPECT_CALL(mockDifferentiableFunction, Value(functionValueTable[0].point))
         .Times(1)
         .WillOnce(Return(2.0));
 
-    EXPECT_CALL(mockFunction, Value(functionValueTable[1].point))
+    EXPECT_CALL(mockDifferentiableFunction, Value(functionValueTable[1].point))
         .Times(1)
         .WillOnce(Return(4.0));
 
@@ -95,14 +88,7 @@ TEST_F(L2NormDifferenceFunctionalTests, Residual_WithFunction_ShouldReturnResidu
     auto diff2 = std::abs(4.0 - functionValueTable[1].value);
     auto expectedResidual = Vector{{diff1, diff2}};
 
-    ASSERT_EQ(functional->Residual(mockFunction), expectedResidual);
-}
-
-TEST_F(L2NormDifferenceFunctionalTests, Jacobian_WithFunction_ShouldThrowException)
-{
-    MockFunction mockFunction;
-
-    ASSERT_THROW(functional->Jacobian(mockFunction), std::runtime_error);
+    ASSERT_EQ(functional->Residual(mockDifferentiableFunction), expectedResidual);
 }
 
 TEST_F(L2NormDifferenceFunctionalTests, Jacobian_WithDifferentiableFunction_ShouldReturnJacobian)

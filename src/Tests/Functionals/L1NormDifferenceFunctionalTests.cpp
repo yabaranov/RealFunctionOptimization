@@ -41,13 +41,6 @@ TEST_F(L1NormDifferenceFunctionalTests, Value_WithFunction_ShouldReturnValue)
     ASSERT_EQ(functional->Value(mockFunction), std::abs(2.0 - functionValueTable[0].value) + std::abs(1.0 - functionValueTable[1].value));
 }
 
-TEST_F(L1NormDifferenceFunctionalTests, Gradient_WithFunction_ShouldThrowException)
-{
-    MockFunction mockFunction;
-
-    ASSERT_THROW(functional->Gradient(mockFunction), std::runtime_error);
-}
-
 TEST_F(L1NormDifferenceFunctionalTests, Gradient_WithDifferentiableFunction_ShouldReturnGradient)
 {
     MockDifferentiableFunction mockDifferentiableFunction;

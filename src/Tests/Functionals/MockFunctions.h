@@ -12,14 +12,14 @@ public:
         Value,
         (const Vector& point),
         (override)
-        );
+    );
 
     MOCK_METHOD(
         Vector,
         Gradient,
         (const Vector& point),
         (override)
-        );
+    );
 };
 
 class MockFunction : public Functions::IFunction
@@ -30,5 +30,5 @@ public:
         Value,
         (const Vector& point),
         (override)
-        );
+    );
 };

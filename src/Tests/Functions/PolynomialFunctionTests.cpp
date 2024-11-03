@@ -1,28 +1,12 @@
 #include <gtest/gtest.h>
-#include "Functions/PolynomialFunction.h"
-
-TEST(PolynomialFunctionTests, Bind_WithValidParameters_ShouldReturnUniquePtrToIFunctionAndCastToLineFunctionBase)
-{
-    Vector parameters(3);
-    parameters << 1.0, 2.0, 3.0;
-
-    Functions::PolynomialFunction polynomialFunction;
-    std::unique_ptr<Functions::IFunction> function = polynomialFunction.Bind(parameters);
-
-    ASSERT_TRUE(function != nullptr);
-
-    auto lineFunctionBase = dynamic_cast<Functions::LineFunctionBase*>(function.get());
-
-    ASSERT_TRUE(lineFunctionBase != nullptr);
-}
+#include "Functions/Factories/PolynomialFunctionFactory.h"
 
 TEST(InternalPolynomialFunctionTests, Value_WithCoefficientsAndSizeOfPointNotEqualOne_ShouldThrowException)
 {
     Vector parameters(3);
     parameters << 1.0, 2.0, 3.0;
 
-    Functions::PolynomialFunction polynomialFunction;
-    auto function = polynomialFunction.Bind(parameters);
+    auto function = Functions::PolynomialFunctionFactory().CreateFunction(parameters);
 
     Vector point(3);
     point << 1.0, 2.0, 3.0;
@@ -35,8 +19,7 @@ TEST(InternalPolynomialFunctionTests, Value_WithCoefficientsAndSizeOfPointEqualO
     Vector parameters(3);
     parameters << 1.0, 0.0, 0.0;
 
-    Functions::PolynomialFunction polynomialFunction;
-    auto function = polynomialFunction.Bind(parameters);
+    auto function = Functions::PolynomialFunctionFactory().CreateFunction(parameters);
 
     Vector point(1);
     point << 3.0;
@@ -51,8 +34,7 @@ TEST(InternalPolynomialFunctionTests, Value_WithEmptyCoefficients_ShouldReturnFr
     Vector parameters(1);
     parameters << 1.0;
 
-    Functions::PolynomialFunction polynomialFunction;
-    auto function = polynomialFunction.Bind(parameters);
+    auto function = Functions::PolynomialFunctionFactory().CreateFunction(parameters);
 
     Vector point1(3);
     point1 << 1.0, 2.0, 3.0;

@@ -4,6 +4,7 @@
 namespace Functions
 {
     class IFunction;
+    class IDifferentiableFunction;
 }
 
 namespace Functionals
@@ -19,15 +20,15 @@ namespace Functionals
     {
     public:
         ~IDifferentiableFunctional() override = default;
-        virtual Vector Gradient(Functions::IFunction& function) = 0;
+        virtual Vector Gradient(Functions::IDifferentiableFunction& differentiablefunction) = 0;
     };
 
     class ILeastSquaresFunctional : virtual public IFunctional
     {
     public:
         ~ILeastSquaresFunctional() override = default;
-        virtual Vector Residual(Functions::IFunction& function) = 0;
-        virtual Matrix Jacobian(Functions::IFunction& function) = 0;
+        virtual Vector Residual(Functions::IDifferentiableFunction& differentiablefunction) = 0;
+        virtual Matrix Jacobian(Functions::IDifferentiableFunction& differentiablefunction) = 0;
     };
 
     struct FunctionPointAndValue

@@ -9,8 +9,8 @@ class L2NormDifferenceFunctional : public IDifferentiableFunctional, public ILea
 public:
    L2NormDifferenceFunctional(const std::vector<FunctionPointAndValue>& functionValueTable);
    double Value(Functions::IFunction& function) override;
-   Vector Gradient(Functions::IFunction& function) override;
-   Vector Residual(Functions::IFunction& function) override;
-   Matrix Jacobian(Functions::IFunction& function) override;
+   Vector Gradient(Functions::IDifferentiableFunction& function) override;
+   Vector Residual(Functions::IDifferentiableFunction& function) override;
+   Matrix Jacobian(Functions::IDifferentiableFunction& function) override;
 };
 }

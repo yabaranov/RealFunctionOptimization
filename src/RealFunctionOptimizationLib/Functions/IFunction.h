@@ -11,13 +11,6 @@ public:
    virtual double Value(const Vector& point) = 0;
 };
 
-class IParametricFunction
-{
-public:
-   virtual ~IParametricFunction() = default;
-   virtual std::unique_ptr<IFunction> Bind(const Vector& parameters) = 0;
-};
-
 class IDifferentiableFunction : public IFunction
 {
 public:

@@ -27,28 +27,24 @@ double L2NormDifferenceFunctional::Value(IFunction& function)
    return sum;
 }
 
-Vector L2NormDifferenceFunctional::Gradient(IFunction& function)
+Vector L2NormDifferenceFunctional::Gradient(Functions::IDifferentiableFunction& differentiableFunction)
 {
-   if(dynamic_cast<IDifferentiableFunction*>(&function) == nullptr)
-      throw std::runtime_error("Gradient accepts only IDifferentiableFunction objective functions");
-   auto& differentiableFunction = dynamic_cast<IDifferentiableFunction&>(function);
-
    // IDifferentiableFunction does not include any method for getting the gradient dimensionality,
    // so we have to write this garbage
    Vector gradient = differentiableFunction.Gradient(m_functionValueTable.front().point);
-   gradient *= 2 * (function.Value(m_functionValueTable.front().point) - m_functionValueTable.front().value);
+   gradient *= 2 * (differentiableFunction.Value(m_functionValueTable.front().point) - m_functionValueTable.front().value);
 
    for (const auto& functionPointAndValue : m_functionValueTable | views::drop(1))
    {
       Vector functionGradient = differentiableFunction.Gradient(functionPointAndValue.point);
-      auto difference = function.Value(functionPointAndValue.point) - functionPointAndValue.value;
+      auto difference = differentiableFunction.Value(functionPointAndValue.point) - functionPointAndValue.value;
       gradient += 2 * difference * functionGradient;
    }
 
    return gradient;
 }
 
-Vector L2NormDifferenceFunctional::Residual(IFunction& function)
+Vector L2NormDifferenceFunctional::Residual(Functions::IDifferentiableFunction& function)
 {
    Vector residual = Vector::Zero(m_functionValueTable.size());
    for (auto&& [index, pointValue] : std::views::enumerate(m_functionValueTable))
@@ -57,12 +53,8 @@ Vector L2NormDifferenceFunctional::Residual(IFunction& function)
    return residual;
 }
 
-Matrix L2NormDifferenceFunctional::Jacobian(IFunction& function)
+Matrix L2NormDifferenceFunctional::Jacobian(Functions::IDifferentiableFunction& differentiableFunction)
 {
-   if(dynamic_cast<IDifferentiableFunction*>(&function) == nullptr)
-      throw std::runtime_error("Gradient accepts only IDifferentiableFunction objective functions");
-   auto& differentiableFunction = dynamic_cast<IDifferentiableFunction&>(function);
-
    // IDifferentiableFunction does not include any method for getting the gradient dimensionality,
    // so we have to write this garbage
    Vector functionGradient = differentiableFunction.Gradient(m_functionValueTable.front().point);

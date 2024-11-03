@@ -2,49 +2,49 @@
 
 #include "Functionals/IFunctional.h"
 #include "Functions/IFunction.h"
+#include "Functions/Factories/IDifferentiableFunctionFactory.h"
 
 namespace Optimizators
 {
 using namespace Functions;
 using namespace Functionals;
 
-GradientDescentOptimizator::GradientDescentOptimizator(uint32_t maxIterations, double maxResidual)
-    : OptimizatorBase(maxIterations, maxResidual)
+Vector GradientDescentOptimizator::Minimize(const Vector& initialParameters, Vector* minimumParameters, Vector* maximumParameters)
 {
-}
-
-Vector GradientDescentOptimizator::Minimize(IFunctional& objective, IParametricFunction& function,
-    const Vector& initialParameters, Vector* minimumParameters, Vector* maximumParameters)
-{
-    if (dynamic_cast<IDifferentiableFunctional*>(&objective) == nullptr)
-        throw std::runtime_error("GradientDescentOptimizator accepts only IDifferentiableFunctional objective functions");
-
-    auto& differentiableFunctional = dynamic_cast<IDifferentiableFunctional&>(objective);
-
     Vector parameters = initialParameters;
-    Vector gradient = differentiableFunctional.Gradient(*function.Bind(parameters));
+    Vector gradient = m_differentiableFunctional->Gradient(dynamic_cast<IDifferentiableFunction&>(*m_differentiableFunctionFactory->CreateFunction(parameters)));
 
     for (uint32_t i = 0; i < m_maxIterations; i++)
     {
-        const double value = differentiableFunctional.Value(*function.Bind(parameters));
+        const double value = m_differentiableFunctional->Value(*m_differentiableFunctionFactory->CreateFunction(parameters));
         if (value < m_maxResidual)
             break;
 
-        const double alpha = OneDOptimization(differentiableFunctional, function, parameters, gradient);
+        const double alpha = OneDOptimization(*m_differentiableFunctional, *m_differentiableFunctionFactory, parameters, gradient);
     
         parameters = parameters - alpha * gradient;
-        gradient = differentiableFunctional.Gradient(*function.Bind(parameters));
+        gradient = m_differentiableFunctional->Gradient(dynamic_cast<IDifferentiableFunction&>(*m_differentiableFunctionFactory->CreateFunction(parameters)));
     }
 
     return parameters;
 }
 
-double GradientDescentOptimizator::OneDOptimization(IDifferentiableFunctional& objective,
-    IParametricFunction& function, const Vector& parameters, const Vector& gradient)
+void GradientDescentOptimizator::setFunctional(std::unique_ptr<Functionals::IDifferentiableFunctional> differentiableFunctional)
+{
+    m_differentiableFunctional = std::move(differentiableFunctional);
+}
+
+void GradientDescentOptimizator::setFunctionFactory(std::unique_ptr<Functions::IDifferentiableFunctionFactory> differentiableFunctionFactory)
+{
+    m_differentiableFunctionFactory = std::move(differentiableFunctionFactory);
+}
+
+double GradientDescentOptimizator::OneDOptimization(IDifferentiableFunctional& differentiableFunctional,
+    Functions::IDifferentiableFunctionFactory& differentiablefunctionFactory, const Vector& parameters, const Vector& gradient)
 {
     static const double GOLDEN_A = (3.0 - std::sqrt(5.0)) / 2.0;
     static const double GOLDEN_B = (std::sqrt(5.0) - 1.0) / 2.0;
-    auto fun = [&](double t) { return objective.Value(*function.Bind(parameters - gradient * t)); };
+    auto fun = [&](double t) { return differentiableFunctional.Value(*differentiablefunctionFactory.CreateFunction(parameters - gradient * t)); };
     
     double a = 0.0;
     double b = 1.0;

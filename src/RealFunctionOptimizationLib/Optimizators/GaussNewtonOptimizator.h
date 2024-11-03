@@ -1,13 +1,28 @@
 #pragma once
 #include "IOptimizator.h"
 
+namespace Functionals
+{
+class ILeastSquaresFunctional;
+}
+
+namespace Functions
+{
+class IDifferentiableFunctionFactory;
+}
+
 namespace Optimizators
 {
 class GaussNewtonOptimizator : public IOptimizator, public OptimizatorBase
 {
 public:
-    GaussNewtonOptimizator(uint32_t maxIterations, double maxResidual);
-    Vector Minimize(Functionals::IFunctional& objective, Functions::IParametricFunction& function,
-        const Vector& initialParameters, Vector* minimumParameters, Vector* maximumParameters) override;
+    GaussNewtonOptimizator() = default;
+    Vector Minimize(const Vector& initialParameters, Vector* minimumParameters, Vector* maximumParameters) override;
+    void setFunctional(std::unique_ptr<Functionals::ILeastSquaresFunctional> leastSquaresFunctional);
+    void setFunctionFactory(std::unique_ptr<Functions::IDifferentiableFunctionFactory> differentiableFunctionFactory);
+
+private:
+    std::unique_ptr<Functionals::ILeastSquaresFunctional> m_leastSquaresFunctional;
+    std::unique_ptr<Functions::IDifferentiableFunctionFactory> m_differentiableFunctionFactory;
 };
 }
