@@ -16,11 +16,11 @@ using namespace Functionals;
 TEST_F(GradientDescentL1NormOptimizationTests, Minimize_WithLineFunctionAndL1Functional_ShouldMinimize)
 {
     auto lineFunctionFactory = std::make_unique<LineFunctionFactory>();
-    auto optimizator = GradientDescentOptimizatorBuilder().SetFunctionFactory(std::move(lineFunctionFactory))
-                                                          .SetFunctional(std::move(LineFunctional))
-                                                          .SetMaxIterations(MaxIterations)
-                                                          .SetMaxResidual(MaxResidual)
-                                                          .Build();
+    auto optimizator = *GradientDescentOptimizatorBuilder().SetFunctionFactory(std::move(lineFunctionFactory))
+                                                           .SetFunctional(std::move(LineFunctional))
+                                                           .SetMaxIterations(MaxIterations)
+                                                           .SetMaxResidual(MaxResidual)
+                                                           .Build();
 
     Vector parameters = optimizator->Minimize(LINE_INITIAL_PARAMETERS);
 
@@ -30,11 +30,11 @@ TEST_F(GradientDescentL1NormOptimizationTests, Minimize_WithLineFunctionAndL1Fun
 TEST_F(GradientDescentL1NormOptimizationTests, Minimize_WithPiecewiseLineFunctionAndL1Functional_ShouldMinimize)
 {
     auto piecewiseLineFunctionFactory = std::make_unique<PiecewiseLineFunctionFactory>(SPLINE_ARGUMENTS);
-    auto optimizator = GradientDescentOptimizatorBuilder().SetFunctionFactory(std::move(piecewiseLineFunctionFactory))
-                                                          .SetFunctional(std::move(SplineFunctional))
-                                                          .SetMaxIterations(MaxIterations)
-                                                          .SetMaxResidual(MaxResidual)
-                                                          .Build();
+    auto optimizator = *GradientDescentOptimizatorBuilder().SetFunctionFactory(std::move(piecewiseLineFunctionFactory))
+                                                           .SetFunctional(std::move(SplineFunctional))
+                                                           .SetMaxIterations(MaxIterations)
+                                                           .SetMaxResidual(MaxResidual)
+                                                           .Build();
 
     Vector parameters = optimizator->Minimize(SPLINE_INITIAL_PARAMETERS);
 
@@ -45,11 +45,11 @@ TEST_F(GradientDescentL1NormOptimizationTests, Minimize_WithPiecewiseLineFunctio
 TEST_F(GradientDescentL2NormOptimizationTests, Minimize_WithLineFunctionAndL2Functional_ShouldMinimize)
 {
     auto lineFunctionFactory = std::make_unique<LineFunctionFactory>();
-    auto optimizator = GradientDescentOptimizatorBuilder().SetFunctionFactory(std::move(lineFunctionFactory))
-                                                          .SetFunctional(std::move(LineFunctional))
-                                                          .SetMaxIterations(MaxIterations)
-                                                          .SetMaxResidual(MaxResidual)
-                                                          .Build();
+    auto optimizator = *GradientDescentOptimizatorBuilder().SetFunctionFactory(std::move(lineFunctionFactory))
+                                                           .SetFunctional(std::move(LineFunctional))
+                                                           .SetMaxIterations(MaxIterations)
+                                                           .SetMaxResidual(MaxResidual)
+                                                           .Build();
 
     Vector parameters = optimizator->Minimize(LINE_INITIAL_PARAMETERS);
 
@@ -59,11 +59,11 @@ TEST_F(GradientDescentL2NormOptimizationTests, Minimize_WithLineFunctionAndL2Fun
 TEST_F(GradientDescentL2NormOptimizationTests, Minimize_WithPiecewiseLineFunctionAndL2Functional_ShouldMinimize)
 {
     auto piecewiseLineFunctionFactory = std::make_unique<PiecewiseLineFunctionFactory>(SPLINE_ARGUMENTS);
-    auto optimizator = GradientDescentOptimizatorBuilder().SetFunctionFactory(std::move(piecewiseLineFunctionFactory))
-                                                          .SetFunctional(std::move(SplineFunctional))
-                                                          .SetMaxIterations(MaxIterations)
-                                                          .SetMaxResidual(MaxResidual)
-                                                          .Build();
+    auto optimizator = *GradientDescentOptimizatorBuilder().SetFunctionFactory(std::move(piecewiseLineFunctionFactory))
+                                                           .SetFunctional(std::move(SplineFunctional))
+                                                           .SetMaxIterations(MaxIterations)
+                                                           .SetMaxResidual(MaxResidual)
+                                                           .Build();
 
     Vector parameters = optimizator->Minimize(SPLINE_INITIAL_PARAMETERS);
 

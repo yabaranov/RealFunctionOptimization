@@ -18,22 +18,28 @@ GradientDescentOptimizatorBuilder::GradientDescentOptimizatorBuilder()
 GradientDescentOptimizatorBuilder& GradientDescentOptimizatorBuilder::SetFunctional(std::unique_ptr<Functionals::IFunctional> functional)
 {
     auto differentiableFunctional = dynamic_cast<Functionals::IDifferentiableFunctional*>(functional.get());
-    if (differentiableFunctional == nullptr)
-        throw std::runtime_error("GradientDescentOptimizator accepts only IDifferentiableFunctional");
+    if (differentiableFunctional)
+    {
+        m_gradientDescentOptimizator->SetFunctional(std::unique_ptr<Functionals::IDifferentiableFunctional>(differentiableFunctional));
+        functional.release();
+    }
+    else
+        m_errorMessage += "GradientDescentOptimizator accepts only IDifferentiableFunctional ";
 
-    m_gradientDescentOptimizator->SetFunctional(std::unique_ptr<Functionals::IDifferentiableFunctional>(differentiableFunctional));
-    functional.release();
     return *this;
 }
 
 GradientDescentOptimizatorBuilder& GradientDescentOptimizatorBuilder::SetFunctionFactory(std::unique_ptr<Functions::IFunctionFactory> functionFactory)
 {
     auto differentiablefunctionFactory = dynamic_cast<Functions::IDifferentiableFunctionFactory*>(functionFactory.get());
-    if (differentiablefunctionFactory == nullptr)
-        throw std::runtime_error("GradientDescentOptimizator accepts only IDifferentiableFunctionFactory");
+    if (differentiablefunctionFactory)
+    {
+        m_gradientDescentOptimizator->SetFunctionFactory(std::unique_ptr<Functions::IDifferentiableFunctionFactory>(differentiablefunctionFactory));
+        functionFactory.release();
+    }
+    else
+        m_errorMessage += "GradientDescentOptimizator accepts only IDifferentiableFunctionFactory ";
 
-    m_gradientDescentOptimizator->SetFunctionFactory(std::unique_ptr<Functions::IDifferentiableFunctionFactory>(differentiablefunctionFactory));
-    functionFactory.release();
     return *this;
 }
 
@@ -49,8 +55,11 @@ GradientDescentOptimizatorBuilder& GradientDescentOptimizatorBuilder::SetMaxResi
     return *this;
 }
 
-std::unique_ptr<IOptimizator> GradientDescentOptimizatorBuilder::Build()
+std::expected<std::unique_ptr<IOptimizator>, std::string> GradientDescentOptimizatorBuilder::Build()
 {
+    if(!m_errorMessage.empty())
+        return std::unexpected(m_errorMessage);
+
     auto optimizator = std::move(m_gradientDescentOptimizator);
     Reset();
     return optimizator;
@@ -58,6 +67,7 @@ std::unique_ptr<IOptimizator> GradientDescentOptimizatorBuilder::Build()
 
 void GradientDescentOptimizatorBuilder::Reset()
 {
+    m_errorMessage.clear();
     m_gradientDescentOptimizator = std::make_unique<GradientDescentOptimizator>();
 }
 }

@@ -18,22 +18,28 @@ GaussNewtonOptimizatorBuilder::GaussNewtonOptimizatorBuilder()
 GaussNewtonOptimizatorBuilder& GaussNewtonOptimizatorBuilder::SetFunctional(std::unique_ptr<Functionals::IFunctional> functional)
 {
     auto differentiableFunctional = dynamic_cast<Functionals::ILeastSquaresFunctional*>(functional.get());
-    if (differentiableFunctional == nullptr)
-        throw std::runtime_error("GradientDescentOptimizator accepts only ILeastSquaresFunctional");
+    if (differentiableFunctional)
+    {
+        m_gaussNewtonOptimizator->SetFunctional(std::unique_ptr<Functionals::ILeastSquaresFunctional>(differentiableFunctional));
+        functional.release();
+    }
+    else
+        m_errorMessage += "GaussNewtonOptimizator accepts only ILeastSquaresFunctional ";
 
-    m_gaussNewtonOptimizator->SetFunctional(std::unique_ptr<Functionals::ILeastSquaresFunctional>(differentiableFunctional));
-    functional.release();
     return *this;
 }
 
 GaussNewtonOptimizatorBuilder& GaussNewtonOptimizatorBuilder::SetFunctionFactory(std::unique_ptr<Functions::IFunctionFactory> functionFactory)
 {
     auto differentiablefunctionFactory = dynamic_cast<Functions::IDifferentiableFunctionFactory*>(functionFactory.get());
-    if (differentiablefunctionFactory == nullptr)
-        throw std::runtime_error("GradientDescentOptimizator accepts only IDifferentiableFunctionFactory");
+    if (differentiablefunctionFactory)
+    {
+        m_gaussNewtonOptimizator->SetFunctionFactory(std::unique_ptr<Functions::IDifferentiableFunctionFactory>(differentiablefunctionFactory));
+        functionFactory.release();
+    }
+    else
+        m_errorMessage += "GradientDescentOptimizator accepts only IDifferentiableFunctionFactory ";
 
-    m_gaussNewtonOptimizator->SetFunctionFactory(std::unique_ptr<Functions::IDifferentiableFunctionFactory>(differentiablefunctionFactory));
-    functionFactory.release();
     return *this;
 }
 
@@ -49,8 +55,11 @@ GaussNewtonOptimizatorBuilder& GaussNewtonOptimizatorBuilder::SetMaxResidual(dou
     return *this;
 }
 
-std::unique_ptr<IOptimizator> GaussNewtonOptimizatorBuilder::Build()
+std::expected<std::unique_ptr<IOptimizator>, std::string> GaussNewtonOptimizatorBuilder::Build()
 {
+    if (!m_errorMessage.empty())
+        return std::unexpected(m_errorMessage);
+
     auto optimizator = std::move(m_gaussNewtonOptimizator);
     Reset();
     return optimizator;
@@ -58,6 +67,7 @@ std::unique_ptr<IOptimizator> GaussNewtonOptimizatorBuilder::Build()
 
 void GaussNewtonOptimizatorBuilder::Reset()
 {
+    m_errorMessage.clear();
     m_gaussNewtonOptimizator = std::make_unique<GaussNewtonOptimizator>();
 }
 }

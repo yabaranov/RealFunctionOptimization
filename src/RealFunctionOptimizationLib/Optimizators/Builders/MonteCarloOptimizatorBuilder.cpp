@@ -37,7 +37,7 @@ MonteCarloOptimizatorBuilder& MonteCarloOptimizatorBuilder::SetMaxResidual(doubl
     return *this;
 }
 
-std::unique_ptr<IOptimizator> MonteCarloOptimizatorBuilder::Build()
+std::expected<std::unique_ptr<IOptimizator>, std::string> MonteCarloOptimizatorBuilder::Build()
 {
     auto optimizator = std::move(m_monteCarloOptimizator);
     Reset();

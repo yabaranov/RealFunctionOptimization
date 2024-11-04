@@ -15,7 +15,7 @@ public:
     MonteCarloOptimizatorBuilder& SetFunctionFactory(std::unique_ptr<Functions::IFunctionFactory> functionFactory) override;
     MonteCarloOptimizatorBuilder& SetMaxIterations(uint32_t maxIterations) override;
     MonteCarloOptimizatorBuilder& SetMaxResidual(double maxResidual) override;
-    std::unique_ptr<IOptimizator> Build() override;
+    std::expected<std::unique_ptr<IOptimizator>, std::string> Build() override;
     void Reset() override;
 
     MonteCarloOptimizatorBuilder& SetSeed(uint32_t seed);

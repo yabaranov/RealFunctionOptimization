@@ -15,7 +15,7 @@ using namespace Functionals;
 TEST_F(GaussNewtonL2NormOptimizationTests, Minimize_WithLineFunctionAndL2Functional_ShouldMinimize)
 {
     auto lineFunctionFactory = std::make_unique<LineFunctionFactory>();
-    auto optimizator = GaussNewtonOptimizatorBuilder().SetFunctionFactory(std::move(lineFunctionFactory))
+    auto optimizator = *GaussNewtonOptimizatorBuilder().SetFunctionFactory(std::move(lineFunctionFactory))
                                                       .SetFunctional(std::move(LineFunctional))
                                                       .SetMaxIterations(MaxIterations)
                                                       .SetMaxResidual(MaxResidual)
@@ -29,7 +29,7 @@ TEST_F(GaussNewtonL2NormOptimizationTests, Minimize_WithLineFunctionAndL2Functio
 TEST_F(GaussNewtonL2NormOptimizationTests, Minimize_WithPiecewiseLineFunctionAndL2Functional_ShouldMinimize)
 {
     auto piecewiseLineFunctionFactory = std::make_unique<PiecewiseLineFunctionFactory>(SPLINE_ARGUMENTS);   
-    auto optimizator = GaussNewtonOptimizatorBuilder().SetFunctionFactory(std::move(piecewiseLineFunctionFactory))
+    auto optimizator = *GaussNewtonOptimizatorBuilder().SetFunctionFactory(std::move(piecewiseLineFunctionFactory))
                                                       .SetFunctional(std::move(SplineFunctional))
                                                       .SetMaxIterations(MaxIterations)
                                                       .SetMaxResidual(MaxResidual)

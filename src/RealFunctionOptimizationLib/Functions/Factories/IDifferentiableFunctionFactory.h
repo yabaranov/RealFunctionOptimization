@@ -4,11 +4,6 @@
 
 namespace Functions
 {
-class IDifferentiableFunction;
-}
-
-namespace Functions
-{
 class IDifferentiableFunctionFactory : public IFunctionFactory
 {
 public:
