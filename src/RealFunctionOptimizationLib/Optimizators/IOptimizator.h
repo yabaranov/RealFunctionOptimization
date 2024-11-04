@@ -15,8 +15,8 @@ class OptimizatorBase
 {
 public:
     OptimizatorBase() = default;
-    void setMaxIterations(uint32_t maxIterations) {m_maxIterations = maxIterations;}
-    void setMaxResidual(double maxResidual) {m_maxResidual = maxResidual;}
+    void SetMaxIterations(uint32_t maxIterations) {m_maxIterations = maxIterations;}
+    void SetMaxResidual(double maxResidual) {m_maxResidual = maxResidual;}
 
 protected:
     uint32_t m_maxIterations{0};

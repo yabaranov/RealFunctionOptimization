@@ -14,14 +14,12 @@ using namespace Functionals;
 
 TEST_F(GaussNewtonL2NormOptimizationTests, Minimize_WithLineFunctionAndL2Functional_ShouldMinimize)
 {
-    GaussNewtonOptimizatorBuilder gaussNewtonOptimizatorBuilder;
     auto lineFunctionFactory = std::make_unique<LineFunctionFactory>();
-
-    auto optimizator = gaussNewtonOptimizatorBuilder.setFunctionFactory(std::move(lineFunctionFactory))
-                                                    .setFunctional(std::move(LineFunctional))
-                                                    .setMaxIterations(MaxIterations)
-                                                    .setMaxResidual(MaxResidual)
-                                                    .getOptimizator();
+    auto optimizator = GaussNewtonOptimizatorBuilder().SetFunctionFactory(std::move(lineFunctionFactory))
+                                                      .SetFunctional(std::move(LineFunctional))
+                                                      .SetMaxIterations(MaxIterations)
+                                                      .SetMaxResidual(MaxResidual)
+                                                      .Build();
 
     Vector parameters = optimizator->Minimize(LINE_INITIAL_PARAMETERS);
 
@@ -30,14 +28,12 @@ TEST_F(GaussNewtonL2NormOptimizationTests, Minimize_WithLineFunctionAndL2Functio
 
 TEST_F(GaussNewtonL2NormOptimizationTests, Minimize_WithPiecewiseLineFunctionAndL2Functional_ShouldMinimize)
 {
-    GaussNewtonOptimizatorBuilder gaussNewtonOptimizatorBuilder;
-    auto piecewiseLineFunctionFactory = std::make_unique<PiecewiseLineFunctionFactory>(SPLINE_ARGUMENTS);
-
-    auto optimizator = gaussNewtonOptimizatorBuilder.setFunctionFactory(std::move(piecewiseLineFunctionFactory))
-                                                    .setFunctional(std::move(LineFunctional))
-                                                    .setMaxIterations(MaxIterations)
-                                                    .setMaxResidual(MaxResidual)
-                                                    .getOptimizator();
+    auto piecewiseLineFunctionFactory = std::make_unique<PiecewiseLineFunctionFactory>(SPLINE_ARGUMENTS);   
+    auto optimizator = GaussNewtonOptimizatorBuilder().SetFunctionFactory(std::move(piecewiseLineFunctionFactory))
+                                                      .SetFunctional(std::move(SplineFunctional))
+                                                      .SetMaxIterations(MaxIterations)
+                                                      .SetMaxResidual(MaxResidual)
+                                                      .Build();
 
     Vector parameters = optimizator->Minimize(SPLINE_INITIAL_PARAMETERS);
 

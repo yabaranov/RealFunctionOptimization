@@ -11,12 +11,12 @@ class GaussNewtonOptimizatorBuilder : public IOptimizatorBuilder
 public:
     GaussNewtonOptimizatorBuilder();
 
-    IOptimizatorBuilder& setFunctional(std::unique_ptr<Functionals::IFunctional> functional) override;
-    IOptimizatorBuilder& setFunctionFactory(std::unique_ptr<Functions::IFunctionFactory> functionFactory) override;
-    IOptimizatorBuilder& setMaxIterations(uint32_t maxIterations) override;
-    IOptimizatorBuilder& setMaxResidual(double maxResidual) override;
-    std::unique_ptr<IOptimizator> getOptimizator() override;
-    void reset() override;
+    GaussNewtonOptimizatorBuilder& SetFunctional(std::unique_ptr<Functionals::IFunctional> functional) override;
+    GaussNewtonOptimizatorBuilder& SetFunctionFactory(std::unique_ptr<Functions::IFunctionFactory> functionFactory) override;
+    GaussNewtonOptimizatorBuilder& SetMaxIterations(uint32_t maxIterations) override;
+    GaussNewtonOptimizatorBuilder& SetMaxResidual(double maxResidual) override;
+    std::unique_ptr<IOptimizator> Build() override;
+    void Reset() override;
 
     ~GaussNewtonOptimizatorBuilder() override = default;
 

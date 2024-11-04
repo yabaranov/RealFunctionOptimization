@@ -7,6 +7,7 @@
 #include "Functionals/LInfNormDifferenceFunctional.h"
 #include "Functionals/MonteCarloIntegralFunctional.h"
 #include "Functions/IFunction.h"
+#include "Functions/Factories/IFunctionFactory.h"
 
 static constexpr double TOLERANCE = 1e-1;
 
@@ -107,7 +108,7 @@ public:
         Vector m_parameters;
     };
 
-    class IntegralFunctionFactory
+    class IntegralFunctionFactory : public Functions::IFunctionFactory
     {
     public:
         std::unique_ptr<Functions::IFunction> CreateFunction(const Vector& parameters) const

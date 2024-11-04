@@ -18,8 +18,8 @@ class GradientDescentOptimizator : public IOptimizator, public OptimizatorBase
 public:
     GradientDescentOptimizator() = default;
     Vector Minimize(const Vector& initialParameters, Vector* minimumParameters, Vector* maximumParameters) override;
-    void setFunctional(std::unique_ptr<Functionals::IDifferentiableFunctional> differentiableFunctional);
-    void setFunctionFactory(std::unique_ptr<Functions::IDifferentiableFunctionFactory> differentiableFunctionFactory);
+    void SetFunctional(std::unique_ptr<Functionals::IDifferentiableFunctional> differentiableFunctional);
+    void SetFunctionFactory(std::unique_ptr<Functions::IDifferentiableFunctionFactory> differentiableFunctionFactory);
 
 private:
     std::unique_ptr<Functionals::IDifferentiableFunctional> m_differentiableFunctional;

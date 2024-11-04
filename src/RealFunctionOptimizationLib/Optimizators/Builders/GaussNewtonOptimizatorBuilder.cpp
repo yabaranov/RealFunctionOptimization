@@ -12,52 +12,52 @@ namespace Optimizators
 {
 GaussNewtonOptimizatorBuilder::GaussNewtonOptimizatorBuilder()
 {
-    reset();
+    Reset();
 }
 
-IOptimizatorBuilder& GaussNewtonOptimizatorBuilder::setFunctional(std::unique_ptr<Functionals::IFunctional> functional)
+GaussNewtonOptimizatorBuilder& GaussNewtonOptimizatorBuilder::SetFunctional(std::unique_ptr<Functionals::IFunctional> functional)
 {
     auto differentiableFunctional = dynamic_cast<Functionals::ILeastSquaresFunctional*>(functional.get());
     if (differentiableFunctional == nullptr)
         throw std::runtime_error("GradientDescentOptimizator accepts only ILeastSquaresFunctional");
 
-    m_gaussNewtonOptimizator->setFunctional(std::unique_ptr<Functionals::ILeastSquaresFunctional>(differentiableFunctional));
+    m_gaussNewtonOptimizator->SetFunctional(std::unique_ptr<Functionals::ILeastSquaresFunctional>(differentiableFunctional));
     functional.release();
     return *this;
 }
 
-IOptimizatorBuilder& GaussNewtonOptimizatorBuilder::setFunctionFactory(std::unique_ptr<Functions::IFunctionFactory> functionFactory)
+GaussNewtonOptimizatorBuilder& GaussNewtonOptimizatorBuilder::SetFunctionFactory(std::unique_ptr<Functions::IFunctionFactory> functionFactory)
 {
     auto differentiablefunctionFactory = dynamic_cast<Functions::IDifferentiableFunctionFactory*>(functionFactory.get());
     if (differentiablefunctionFactory == nullptr)
         throw std::runtime_error("GradientDescentOptimizator accepts only IDifferentiableFunctionFactory");
 
-    m_gaussNewtonOptimizator->setFunctionFactory(std::unique_ptr<Functions::IDifferentiableFunctionFactory>(differentiablefunctionFactory));
+    m_gaussNewtonOptimizator->SetFunctionFactory(std::unique_ptr<Functions::IDifferentiableFunctionFactory>(differentiablefunctionFactory));
+    functionFactory.release();
     return *this;
 }
 
-IOptimizatorBuilder& GaussNewtonOptimizatorBuilder::setMaxIterations(uint32_t maxIterations)
+GaussNewtonOptimizatorBuilder& GaussNewtonOptimizatorBuilder::SetMaxIterations(uint32_t maxIterations)
 {
-    m_gaussNewtonOptimizator->setMaxIterations(maxIterations);
+    m_gaussNewtonOptimizator->SetMaxIterations(maxIterations);
     return *this;
 }
 
-IOptimizatorBuilder& GaussNewtonOptimizatorBuilder::setMaxResidual(double maxResidual)
+GaussNewtonOptimizatorBuilder& GaussNewtonOptimizatorBuilder::SetMaxResidual(double maxResidual)
 {
-    m_gaussNewtonOptimizator->setMaxResidual(maxResidual);
+    m_gaussNewtonOptimizator->SetMaxResidual(maxResidual);
     return *this;
 }
 
-std::unique_ptr<IOptimizator> GaussNewtonOptimizatorBuilder::getOptimizator()
+std::unique_ptr<IOptimizator> GaussNewtonOptimizatorBuilder::Build()
 {
     auto optimizator = std::move(m_gaussNewtonOptimizator);
-    reset();
+    Reset();
     return optimizator;
 }
 
-void GaussNewtonOptimizatorBuilder::reset()
+void GaussNewtonOptimizatorBuilder::Reset()
 {
-    m_gaussNewtonOptimizator.reset();
     m_gaussNewtonOptimizator = std::make_unique<GaussNewtonOptimizator>();
 }
 }

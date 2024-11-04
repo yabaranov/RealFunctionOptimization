@@ -29,12 +29,12 @@ Vector GradientDescentOptimizator::Minimize(const Vector& initialParameters, Vec
     return parameters;
 }
 
-void GradientDescentOptimizator::setFunctional(std::unique_ptr<Functionals::IDifferentiableFunctional> differentiableFunctional)
+void GradientDescentOptimizator::SetFunctional(std::unique_ptr<Functionals::IDifferentiableFunctional> differentiableFunctional)
 {
     m_differentiableFunctional = std::move(differentiableFunctional);
 }
 
-void GradientDescentOptimizator::setFunctionFactory(std::unique_ptr<Functions::IDifferentiableFunctionFactory> differentiableFunctionFactory)
+void GradientDescentOptimizator::SetFunctionFactory(std::unique_ptr<Functions::IDifferentiableFunctionFactory> differentiableFunctionFactory)
 {
     m_differentiableFunctionFactory = std::move(differentiableFunctionFactory);
 }

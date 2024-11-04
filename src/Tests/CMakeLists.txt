@@ -20,7 +20,7 @@ add_executable(${PROJECT_NAME} main.cpp
     Functionals/MonteCarloIntegralFunctionalTests.cpp
     Optimizators/GaussNewtonOptimizatorTests.cpp
     Optimizators/GradientDescentOptimizatorTests.cpp
-    #Optimizators/MonteCarloOptimizatorTests.cpp
+    Optimizators/MonteCarloOptimizatorTests.cpp
     Optimizators/OptimizatorsTestsCommon.h
 )
 

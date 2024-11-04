@@ -43,17 +43,17 @@ Vector MonteCarloOptimizator::Minimize(const Vector& initialParameters, Vector* 
     return minParameters;
 }
 
-void MonteCarloOptimizator::setFunctional(std::unique_ptr<Functionals::IFunctional> functional)
+void MonteCarloOptimizator::SetFunctional(std::unique_ptr<Functionals::IFunctional> functional)
 {
     m_functional = std::move(functional);
 }
 
-void MonteCarloOptimizator::setFunctionFactory(std::unique_ptr<Functions::IFunctionFactory> functionFactory)
+void MonteCarloOptimizator::SetFunctionFactory(std::unique_ptr<Functions::IFunctionFactory> functionFactory)
 {
     m_functionFactory = std::move(functionFactory);
 }
 
-void MonteCarloOptimizator::setSeed(uint32_t seed)
+void MonteCarloOptimizator::SetSeed(uint32_t seed)
 {
     m_randomNumberGenerator.seed(seed);
 }

@@ -12,52 +12,52 @@ namespace Optimizators
 {
 GradientDescentOptimizatorBuilder::GradientDescentOptimizatorBuilder()
 {
-    reset();
+    Reset();
 }
 
-IOptimizatorBuilder& GradientDescentOptimizatorBuilder::setFunctional(std::unique_ptr<Functionals::IFunctional> functional)
+GradientDescentOptimizatorBuilder& GradientDescentOptimizatorBuilder::SetFunctional(std::unique_ptr<Functionals::IFunctional> functional)
 {
     auto differentiableFunctional = dynamic_cast<Functionals::IDifferentiableFunctional*>(functional.get());
     if (differentiableFunctional == nullptr)
         throw std::runtime_error("GradientDescentOptimizator accepts only IDifferentiableFunctional");
 
-    m_gradientDescentOptimizator->setFunctional(std::unique_ptr<Functionals::IDifferentiableFunctional>(differentiableFunctional));
+    m_gradientDescentOptimizator->SetFunctional(std::unique_ptr<Functionals::IDifferentiableFunctional>(differentiableFunctional));
     functional.release();
     return *this;
 }
 
-IOptimizatorBuilder& GradientDescentOptimizatorBuilder::setFunctionFactory(std::unique_ptr<Functions::IFunctionFactory> functionFactory)
+GradientDescentOptimizatorBuilder& GradientDescentOptimizatorBuilder::SetFunctionFactory(std::unique_ptr<Functions::IFunctionFactory> functionFactory)
 {
     auto differentiablefunctionFactory = dynamic_cast<Functions::IDifferentiableFunctionFactory*>(functionFactory.get());
     if (differentiablefunctionFactory == nullptr)
         throw std::runtime_error("GradientDescentOptimizator accepts only IDifferentiableFunctionFactory");
 
-    m_gradientDescentOptimizator->setFunctionFactory(std::unique_ptr<Functions::IDifferentiableFunctionFactory>(differentiablefunctionFactory));
+    m_gradientDescentOptimizator->SetFunctionFactory(std::unique_ptr<Functions::IDifferentiableFunctionFactory>(differentiablefunctionFactory));
+    functionFactory.release();
     return *this;
 }
 
-IOptimizatorBuilder& GradientDescentOptimizatorBuilder::setMaxIterations(uint32_t maxIterations)
+GradientDescentOptimizatorBuilder& GradientDescentOptimizatorBuilder::SetMaxIterations(uint32_t maxIterations)
 {
-    m_gradientDescentOptimizator->setMaxIterations(maxIterations);
+    m_gradientDescentOptimizator->SetMaxIterations(maxIterations);
     return *this;
 }
 
-IOptimizatorBuilder& GradientDescentOptimizatorBuilder::setMaxResidual(double maxResidual)
+GradientDescentOptimizatorBuilder& GradientDescentOptimizatorBuilder::SetMaxResidual(double maxResidual)
 {
-    m_gradientDescentOptimizator->setMaxResidual(maxResidual);
+    m_gradientDescentOptimizator->SetMaxResidual(maxResidual);
     return *this;
 }
 
-std::unique_ptr<IOptimizator> GradientDescentOptimizatorBuilder::getOptimizator()
+std::unique_ptr<IOptimizator> GradientDescentOptimizatorBuilder::Build()
 {
     auto optimizator = std::move(m_gradientDescentOptimizator);
-    reset();
+    Reset();
     return optimizator;
 }
 
-void GradientDescentOptimizatorBuilder::reset()
+void GradientDescentOptimizatorBuilder::Reset()
 {
-    m_gradientDescentOptimizator.reset();
     m_gradientDescentOptimizator = std::make_unique<GradientDescentOptimizator>();
 }
 }

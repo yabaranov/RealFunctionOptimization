@@ -1,11 +1,12 @@
 #include <gtest/gtest.h>
 
 #include "OptimizatorsTestsCommon.h"
-#include "Functions/InterpolationCubicSpline.h"
-#include "Functions/LineFunction.h"
-#include "Functions/PiecewiseLineFunction.h"
-#include "Functions/PolynomialFunction.h"
+#include "Functions/Factories/InterpolationCubicSplineFactory.h"
+#include "Functions/Factories/LineFunctionFactory.h"
+#include "Functions/Factories/PiecewiseLineFunctionFactory.h"
+#include "Functions/Factories/PolynomialFunctionFactory.h"
 #include "Optimizators/MonteCarloOptimizator.h"
+#include "Optimizators/Builders/MonteCarloOptimizatorBuilder.h"
 
 static constexpr uint32_t SEED = 0;
 
@@ -20,21 +21,30 @@ using namespace Functionals;
 
 TEST_F(MonteCarloL1NormOptimizationTests, Minimize_WithLineFunctionAndL1Functional_ShouldMinimize)
 {
-    std::unique_ptr<IOptimizator> optimizator =
-        std::make_unique<MonteCarloOptimizator>(MaxIterations, MaxResidual, SEED);
-    LineFunction lineFunction;
-    Vector parameters = optimizator->Minimize(*LineFunctional, lineFunction, LINE_INITIAL_PARAMETERS);
+    auto lineFunctionFactory = std::make_unique<LineFunctionFactory>();
+    auto optimizator = MonteCarloOptimizatorBuilder().SetFunctionFactory(std::move(lineFunctionFactory))
+                                                     .SetFunctional(std::move(LineFunctional))
+                                                     .SetMaxIterations(MaxIterations)
+                                                     .SetMaxResidual(MaxResidual)
+                                                     .SetSeed(SEED)
+                                                     .Build();
+
+    Vector parameters = optimizator->Minimize(LINE_INITIAL_PARAMETERS);
     
     EXPECT_NEAR(parameters[0], GetMinimizingLineYIsX(), TOLERANCE);
 }
 
 TEST_F(MonteCarloL1NormOptimizationTests, Minimize_WithPiecewiseLineFunctionAndL1Functional_ShouldMinimize)
 {
-    std::unique_ptr<IOptimizator> optimizator =
-        std::make_unique<MonteCarloOptimizator>(MaxIterations, MaxResidual, SEED);
+    auto piecewiseLineFunctionFactory = std::make_unique<PiecewiseLineFunctionFactory>(SPLINE_ARGUMENTS);
+    auto optimizator = MonteCarloOptimizatorBuilder().SetFunctionFactory(std::move(piecewiseLineFunctionFactory))
+                                                     .SetFunctional(std::move(SplineFunctional))
+                                                     .SetMaxIterations(MaxIterations)
+                                                     .SetMaxResidual(MaxResidual)
+                                                     .SetSeed(SEED)
+                                                     .Build();
 
-    PiecewiseLineFunction lineFunction{SPLINE_ARGUMENTS};
-    Vector parameters = optimizator->Minimize(*SplineFunctional, lineFunction, SPLINE_INITIAL_PARAMETERS);
+    Vector parameters = optimizator->Minimize(SPLINE_INITIAL_PARAMETERS);
 
     for (uint32_t i = 0; i < parameters.size(); i++)
         EXPECT_NEAR(parameters[i], FunctionYIsAbsXTable[i].value, TOLERANCE);
@@ -42,11 +52,15 @@ TEST_F(MonteCarloL1NormOptimizationTests, Minimize_WithPiecewiseLineFunctionAndL
 
 TEST_F(MonteCarloL1NormOptimizationTests, Minimize_WithInterpolationCubicSplineFunctionAndL1Functional_ShouldMinimize)
 {
-    std::unique_ptr<IOptimizator> optimizator =
-        std::make_unique<MonteCarloOptimizator>(MaxIterations, MaxResidual, SEED);
+    auto interpolationCubicSplineFactory = std::make_unique<InterpolationCubicSplineFactory>(CUBIC_SPLINE_ARGUMENTS);
+    auto optimizator = MonteCarloOptimizatorBuilder().SetFunctionFactory(std::move(interpolationCubicSplineFactory))
+                                                     .SetFunctional(std::move(CubicSplineFunctional))
+                                                     .SetMaxIterations(MaxIterations)
+                                                     .SetMaxResidual(MaxResidual)
+                                                     .SetSeed(SEED)
+                                                     .Build();
 
-    InterpolationCubicSpline cubicSpline{CUBIC_SPLINE_ARGUMENTS};
-    Vector parameters = optimizator->Minimize(*CubicSplineFunctional, cubicSpline, CUBIC_SPLINE_INITIAL_PARAMETERS);
+    Vector parameters = optimizator->Minimize(CUBIC_SPLINE_INITIAL_PARAMETERS);
 
     for (uint32_t i = 0; i < parameters.size(); i++)
         EXPECT_NEAR(parameters[i], FunctionYIsZigZagXTable[i].value, TOLERANCE);
@@ -54,11 +68,15 @@ TEST_F(MonteCarloL1NormOptimizationTests, Minimize_WithInterpolationCubicSplineF
 
 TEST_F(MonteCarloL1NormOptimizationTests, Minimize_WithPolynomialFunctionAndL1Functional_ShouldMinimize)
 {
-    std::unique_ptr<IOptimizator> optimizator =
-        std::make_unique<MonteCarloOptimizator>(MaxIterations, MaxResidual, SEED);
+    auto polynomialFunctionFactory = std::make_unique<PolynomialFunctionFactory>();
+    auto optimizator = MonteCarloOptimizatorBuilder().SetFunctionFactory(std::move(polynomialFunctionFactory))
+                                                     .SetFunctional(std::move(PolynomialFunctional))
+                                                     .SetMaxIterations(MaxIterations)
+                                                     .SetMaxResidual(MaxResidual)
+                                                     .SetSeed(SEED)
+                                                     .Build();
 
-    PolynomialFunction polynomialFunction;
-    Vector parameters = optimizator->Minimize(*PolynomialFunctional, polynomialFunction, POLYNOMIAL_INITIAL_PARAMETERS);
+    Vector parameters = optimizator->Minimize(POLYNOMIAL_INITIAL_PARAMETERS);
 
     for (uint32_t i = 0; i < parameters.size(); i++)
         EXPECT_NEAR(parameters[i], GetMinimizingPolynomialYIsSquareX(i), TOLERANCE);
@@ -66,21 +84,30 @@ TEST_F(MonteCarloL1NormOptimizationTests, Minimize_WithPolynomialFunctionAndL1Fu
 
 TEST_F(MonteCarloL2NormOptimizationTests, Minimize_WithLineFunctionAndL2Functional_ShouldMinimize)
 {
-    std::unique_ptr<IOptimizator> optimizator =
-        std::make_unique<MonteCarloOptimizator>(MaxIterations, MaxResidual, SEED);
-    LineFunction lineFunction;
-    Vector parameters = optimizator->Minimize(*LineFunctional, lineFunction, LINE_INITIAL_PARAMETERS);
+    auto lineFunctionFactory = std::make_unique<LineFunctionFactory>();
+    auto optimizator = MonteCarloOptimizatorBuilder().SetFunctionFactory(std::move(lineFunctionFactory))
+                                                     .SetFunctional(std::move(LineFunctional))
+                                                     .SetMaxIterations(MaxIterations)
+                                                     .SetMaxResidual(MaxResidual)
+                                                     .SetSeed(SEED)
+                                                     .Build();
+
+    Vector parameters = optimizator->Minimize(LINE_INITIAL_PARAMETERS);
 
     EXPECT_NEAR(parameters[0], GetMinimizingLineYIsX(), TOLERANCE);
 }
 
 TEST_F(MonteCarloL2NormOptimizationTests, Minimize_WithPiecewiseLineFunctionAndL2Functional_ShouldMinimize)
 {
-    std::unique_ptr<IOptimizator> optimizator =
-        std::make_unique<MonteCarloOptimizator>(MaxIterations, MaxResidual, SEED);
+    auto piecewiseLineFunctionFactory = std::make_unique<PiecewiseLineFunctionFactory>(SPLINE_ARGUMENTS);
+    auto optimizator = MonteCarloOptimizatorBuilder().SetFunctionFactory(std::move(piecewiseLineFunctionFactory))
+                                                     .SetFunctional(std::move(SplineFunctional))
+                                                     .SetMaxIterations(MaxIterations)
+                                                     .SetMaxResidual(MaxResidual)
+                                                     .SetSeed(SEED)
+                                                     .Build();
 
-    PiecewiseLineFunction lineFunction{SPLINE_ARGUMENTS};
-    Vector parameters = optimizator->Minimize(*SplineFunctional, lineFunction, SPLINE_INITIAL_PARAMETERS);
+    Vector parameters = optimizator->Minimize(SPLINE_INITIAL_PARAMETERS);
 
     for (uint32_t i = 0; i < parameters.size(); i++)
         EXPECT_NEAR(parameters[i], FunctionYIsAbsXTable[i].value, TOLERANCE);
@@ -88,11 +115,15 @@ TEST_F(MonteCarloL2NormOptimizationTests, Minimize_WithPiecewiseLineFunctionAndL
 
 TEST_F(MonteCarloL2NormOptimizationTests, Minimize_WithInterpolationCubicSplineFunctionAndL2Functional_ShouldMinimize)
 {
-    std::unique_ptr<IOptimizator> optimizator =
-        std::make_unique<MonteCarloOptimizator>(MaxIterations, MaxResidual, SEED);
+    auto interpolationCubicSplineFactory = std::make_unique<InterpolationCubicSplineFactory>(CUBIC_SPLINE_ARGUMENTS);
+    auto optimizator = MonteCarloOptimizatorBuilder().SetFunctionFactory(std::move(interpolationCubicSplineFactory))
+                                                     .SetFunctional(std::move(CubicSplineFunctional))
+                                                     .SetMaxIterations(MaxIterations)
+                                                     .SetMaxResidual(MaxResidual)
+                                                     .SetSeed(SEED)
+                                                     .Build();
 
-    InterpolationCubicSpline cubicSpline{CUBIC_SPLINE_ARGUMENTS};
-    Vector parameters = optimizator->Minimize(*CubicSplineFunctional, cubicSpline, CUBIC_SPLINE_INITIAL_PARAMETERS);
+    Vector parameters = optimizator->Minimize(CUBIC_SPLINE_INITIAL_PARAMETERS);
 
     for (uint32_t i = 0; i < parameters.size(); i++)
         EXPECT_NEAR(parameters[i], FunctionYIsZigZagXTable[i].value, TOLERANCE);
@@ -100,11 +131,15 @@ TEST_F(MonteCarloL2NormOptimizationTests, Minimize_WithInterpolationCubicSplineF
 
 TEST_F(MonteCarloL2NormOptimizationTests, Minimize_WithPolynomialFunctionAndL2Functional_ShouldMinimize)
 {
-    std::unique_ptr<IOptimizator> optimizator =
-        std::make_unique<MonteCarloOptimizator>(MaxIterations, MaxResidual, SEED);
+    auto polynomialFunctionFactory = std::make_unique<PolynomialFunctionFactory>();
+    auto optimizator = MonteCarloOptimizatorBuilder().SetFunctionFactory(std::move(polynomialFunctionFactory))
+                                                     .SetFunctional(std::move(PolynomialFunctional))
+                                                     .SetMaxIterations(MaxIterations)
+                                                     .SetMaxResidual(MaxResidual)
+                                                     .SetSeed(SEED)
+                                                     .Build();
 
-    PolynomialFunction polynomialFunction;
-    Vector parameters = optimizator->Minimize(*PolynomialFunctional, polynomialFunction, POLYNOMIAL_INITIAL_PARAMETERS);
+    Vector parameters = optimizator->Minimize(POLYNOMIAL_INITIAL_PARAMETERS);
 
     for (uint32_t i = 0; i < parameters.size(); i++)
         EXPECT_NEAR(parameters[i], GetMinimizingPolynomialYIsSquareX(i), TOLERANCE);
@@ -112,21 +147,30 @@ TEST_F(MonteCarloL2NormOptimizationTests, Minimize_WithPolynomialFunctionAndL2Fu
 
 TEST_F(MonteCarloLInfNormOptimizationTests, Minimize_WithLineFunctionAndLInfFunctional_ShouldMinimize)
 {
-    std::unique_ptr<IOptimizator> optimizator =
-        std::make_unique<MonteCarloOptimizator>(MaxIterations, MaxResidual, SEED);
-    LineFunction lineFunction;
-    Vector parameters = optimizator->Minimize(*LineFunctional, lineFunction, LINE_INITIAL_PARAMETERS);
+    auto lineFunctionFactory = std::make_unique<LineFunctionFactory>();
+    auto optimizator = MonteCarloOptimizatorBuilder().SetFunctionFactory(std::move(lineFunctionFactory))
+                                                     .SetFunctional(std::move(LineFunctional))
+                                                     .SetMaxIterations(MaxIterations)
+                                                     .SetMaxResidual(MaxResidual)
+                                                     .SetSeed(SEED)
+                                                     .Build();
+
+    Vector parameters = optimizator->Minimize(LINE_INITIAL_PARAMETERS);
 
     EXPECT_NEAR(parameters[0], GetMinimizingLineYIsX(), TOLERANCE);
 }
 
 TEST_F(MonteCarloLInfNormOptimizationTests, Minimize_WithPiecewiseLineFunctionAndL2Functional_ShouldMinimize)
 {
-    std::unique_ptr<IOptimizator> optimizator =
-        std::make_unique<MonteCarloOptimizator>(MaxIterations, MaxResidual, SEED);
+    auto piecewiseLineFunctionFactory = std::make_unique<PiecewiseLineFunctionFactory>(SPLINE_ARGUMENTS);
+    auto optimizator = MonteCarloOptimizatorBuilder().SetFunctionFactory(std::move(piecewiseLineFunctionFactory))
+                                                     .SetFunctional(std::move(SplineFunctional))
+                                                     .SetMaxIterations(MaxIterations)
+                                                     .SetMaxResidual(MaxResidual)
+                                                     .SetSeed(SEED)
+                                                     .Build();
 
-    PiecewiseLineFunction lineFunction{SPLINE_ARGUMENTS};
-    Vector parameters = optimizator->Minimize(*SplineFunctional, lineFunction, SPLINE_INITIAL_PARAMETERS);
+    Vector parameters = optimizator->Minimize(SPLINE_INITIAL_PARAMETERS);
 
     for (uint32_t i = 0; i < parameters.size(); i++)
         EXPECT_NEAR(parameters[i], FunctionYIsAbsXTable[i].value, TOLERANCE);
@@ -134,11 +178,15 @@ TEST_F(MonteCarloLInfNormOptimizationTests, Minimize_WithPiecewiseLineFunctionAn
 
 TEST_F(MonteCarloLInfNormOptimizationTests, Minimize_WithInterpolationCubicSplineFunctionAndLInfFunctional_ShouldMinimize)
 {
-    std::unique_ptr<IOptimizator> optimizator =
-        std::make_unique<MonteCarloOptimizator>(MaxIterations, MaxResidual, SEED);
+    auto interpolationCubicSplineFactory = std::make_unique<InterpolationCubicSplineFactory>(CUBIC_SPLINE_ARGUMENTS);
+    auto optimizator = MonteCarloOptimizatorBuilder().SetFunctionFactory(std::move(interpolationCubicSplineFactory))
+                                                     .SetFunctional(std::move(CubicSplineFunctional))
+                                                     .SetMaxIterations(MaxIterations)
+                                                     .SetMaxResidual(MaxResidual)
+                                                     .SetSeed(SEED)
+                                                     .Build();
 
-    InterpolationCubicSpline cubicSpline{CUBIC_SPLINE_ARGUMENTS};
-    Vector parameters = optimizator->Minimize(*CubicSplineFunctional, cubicSpline, CUBIC_SPLINE_INITIAL_PARAMETERS);
+    Vector parameters = optimizator->Minimize(CUBIC_SPLINE_INITIAL_PARAMETERS);
 
     for (uint32_t i = 0; i < parameters.size(); i++)
         EXPECT_NEAR(parameters[i], FunctionYIsZigZagXTable[i].value, TOLERANCE);
@@ -146,11 +194,15 @@ TEST_F(MonteCarloLInfNormOptimizationTests, Minimize_WithInterpolationCubicSplin
 
 TEST_F(MonteCarloLInfNormOptimizationTests, Minimize_WithPolynomialFunctionAndLInfFunctional_ShouldMinimize)
 {
-    std::unique_ptr<IOptimizator> optimizator =
-        std::make_unique<MonteCarloOptimizator>(MaxIterations, MaxResidual, SEED);
+    auto polynomialFunctionFactory = std::make_unique<PolynomialFunctionFactory>();
+    auto optimizator = MonteCarloOptimizatorBuilder().SetFunctionFactory(std::move(polynomialFunctionFactory))
+                                                     .SetFunctional(std::move(PolynomialFunctional))
+                                                     .SetMaxIterations(MaxIterations)
+                                                     .SetMaxResidual(MaxResidual)
+                                                     .SetSeed(SEED)
+                                                     .Build();
 
-    PolynomialFunction polynomialFunction;
-    Vector parameters = optimizator->Minimize(*PolynomialFunctional, polynomialFunction, POLYNOMIAL_INITIAL_PARAMETERS);
+    Vector parameters = optimizator->Minimize(POLYNOMIAL_INITIAL_PARAMETERS);
 
     for (uint32_t i = 0; i < parameters.size(); i++)
         EXPECT_NEAR(parameters[i], GetMinimizingPolynomialYIsSquareX(i), TOLERANCE);
@@ -158,12 +210,15 @@ TEST_F(MonteCarloLInfNormOptimizationTests, Minimize_WithPolynomialFunctionAndLI
 
 TEST_F(MonteCarloIntegralOptimizationTests, Minimize_WithIntegralFunctional_ShouldMinimize)
 {
-    std::unique_ptr<IOptimizator> optimizator =
-        std::make_unique<MonteCarloOptimizator>(MaxIterations, MaxResidual, SEED);
+    auto integralFunctionFactory = std::make_unique<IntegralFunctionFactory>();
+    auto optimizator = MonteCarloOptimizatorBuilder().SetFunctionFactory(std::move(integralFunctionFactory))
+                                                     .SetFunctional(std::move(Functional))
+                                                     .SetMaxIterations(MaxIterations)
+                                                     .SetMaxResidual(MaxResidual)
+                                                     .SetSeed(SEED)
+                                                     .Build();
 
-    IntegralFunction function;
-    
-    Vector parameters = optimizator->Minimize(*Functional, function, INTEGRAL_PARAMETERS);
+    Vector parameters = optimizator->Minimize(INTEGRAL_PARAMETERS);
 
     EXPECT_NEAR(parameters[0], GetExpectedMin(), TOLERANCE);
 }

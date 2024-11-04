@@ -21,9 +21,9 @@ class MonteCarloOptimizator :  public IOptimizator, public OptimizatorBase
 public:
     MonteCarloOptimizator() = default;
     Vector Minimize(const Vector& initialParameters, Vector* minimumParameters, Vector* maximumParameters) override;
-    void setFunctional(std::unique_ptr<Functionals::IFunctional> functional);
-    void setFunctionFactory(std::unique_ptr<Functions::IFunctionFactory> functionFactory);
-    void setSeed(uint32_t seed);
+    void SetFunctional(std::unique_ptr<Functionals::IFunctional> functional);
+    void SetFunctionFactory(std::unique_ptr<Functions::IFunctionFactory> functionFactory);
+    void SetSeed(uint32_t seed);
 
 private:
     std::unique_ptr<Functionals::IFunctional> m_functional;

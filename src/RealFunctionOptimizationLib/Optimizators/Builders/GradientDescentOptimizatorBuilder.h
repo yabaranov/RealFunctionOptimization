@@ -11,12 +11,12 @@ class GradientDescentOptimizatorBuilder : public IOptimizatorBuilder
 public:
     GradientDescentOptimizatorBuilder();
 
-    IOptimizatorBuilder& setFunctional(std::unique_ptr<Functionals::IFunctional> functional) override;
-    IOptimizatorBuilder& setFunctionFactory(std::unique_ptr<Functions::IFunctionFactory> functionFactory) override;
-    IOptimizatorBuilder& setMaxIterations(uint32_t maxIterations) override;
-    IOptimizatorBuilder& setMaxResidual(double maxResidual) override;
-    std::unique_ptr<IOptimizator> getOptimizator() override;
-    void reset() override;
+    GradientDescentOptimizatorBuilder& SetFunctional(std::unique_ptr<Functionals::IFunctional> functional) override;
+    GradientDescentOptimizatorBuilder& SetFunctionFactory(std::unique_ptr<Functions::IFunctionFactory> functionFactory) override;
+    GradientDescentOptimizatorBuilder& SetMaxIterations(uint32_t maxIterations) override;
+    GradientDescentOptimizatorBuilder& SetMaxResidual(double maxResidual) override;
+    std::unique_ptr<IOptimizator> Build() override;
+    void Reset() override;
 
    ~GradientDescentOptimizatorBuilder() override = default;
 

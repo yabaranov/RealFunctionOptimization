@@ -10,49 +10,48 @@ namespace Optimizators
 {
 MonteCarloOptimizatorBuilder::MonteCarloOptimizatorBuilder()
 {
-    reset();
+    Reset();
 }
 
-IOptimizatorBuilder& MonteCarloOptimizatorBuilder::setFunctional(std::unique_ptr<Functionals::IFunctional> functional)
+MonteCarloOptimizatorBuilder& MonteCarloOptimizatorBuilder::SetFunctional(std::unique_ptr<Functionals::IFunctional> functional)
 {
-    m_monteCarloOptimizator->setFunctional(std::move(functional));
+    m_monteCarloOptimizator->SetFunctional(std::move(functional));
     return *this;
 }
 
-IOptimizatorBuilder& MonteCarloOptimizatorBuilder::setFunctionFactory(std::unique_ptr<Functions::IFunctionFactory> functionFactory)
+MonteCarloOptimizatorBuilder& MonteCarloOptimizatorBuilder::SetFunctionFactory(std::unique_ptr<Functions::IFunctionFactory> functionFactory)
 {
-    m_monteCarloOptimizator->setFunctionFactory(std::move(functionFactory));
+    m_monteCarloOptimizator->SetFunctionFactory(std::move(functionFactory));
     return *this;
 }
 
-IOptimizatorBuilder& MonteCarloOptimizatorBuilder::setMaxIterations(uint32_t maxIterations)
+MonteCarloOptimizatorBuilder& MonteCarloOptimizatorBuilder::SetMaxIterations(uint32_t maxIterations)
 {
-    m_monteCarloOptimizator->setMaxIterations(maxIterations);
+    m_monteCarloOptimizator->SetMaxIterations(maxIterations);
     return *this;
 }
 
-IOptimizatorBuilder& MonteCarloOptimizatorBuilder::setMaxResidual(double maxResidual)
+MonteCarloOptimizatorBuilder& MonteCarloOptimizatorBuilder::SetMaxResidual(double maxResidual)
 {
-    m_monteCarloOptimizator->setMaxResidual(maxResidual);
+    m_monteCarloOptimizator->SetMaxResidual(maxResidual);
     return *this;
 }
 
-std::unique_ptr<IOptimizator> MonteCarloOptimizatorBuilder::getOptimizator()
+std::unique_ptr<IOptimizator> MonteCarloOptimizatorBuilder::Build()
 {
     auto optimizator = std::move(m_monteCarloOptimizator);
-    reset();
+    Reset();
     return optimizator;
 }
 
-void MonteCarloOptimizatorBuilder::reset()
+void MonteCarloOptimizatorBuilder::Reset()
 {
-    m_monteCarloOptimizator.reset();
     m_monteCarloOptimizator = std::make_unique<MonteCarloOptimizator>();
 }
 
-IOptimizatorBuilder& MonteCarloOptimizatorBuilder::setSeed(uint32_t seed)
+MonteCarloOptimizatorBuilder& MonteCarloOptimizatorBuilder::SetSeed(uint32_t seed)
 {
-    m_monteCarloOptimizator->setSeed(seed);
+    m_monteCarloOptimizator->SetSeed(seed);
     return *this;
 }
 }
