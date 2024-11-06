@@ -11,7 +11,7 @@ FetchContent_MakeAvailable(googletest)
 add_executable(${PROJECT_NAME} main.cpp
     Functions/LineFunctionBaseTests.cpp
     Functions/LineFunctionTests.cpp
-    Functions/InterpolationSplineBaseTests.cpp
+    Functions/SplineBaseTests.cpp
     Functions/PolynomialFunctionTests.cpp
     Functionals/L1NormDifferenceFunctionalTests.cpp
     Functionals/MockFunctions.h

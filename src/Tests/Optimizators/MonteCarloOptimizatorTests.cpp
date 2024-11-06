@@ -1,7 +1,9 @@
 #include <gtest/gtest.h>
 
 #include "OptimizatorsTestsCommon.h"
-#include "Functions/Factories/InterpolationCubicSplineFactory.h"
+#include "Functions/Factories/CubicSplineFactory.h"
+#include "Functions/CubicSpline/Impl/Factories/InterpolationCubicSplineImplFactory.h"
+#include "Functions/CubicSpline/Impl/Factories/SmoothingCubicSplineImplFactory.h"
 #include "Functions/Factories/LineFunctionFactory.h"
 #include "Functions/Factories/PiecewiseLineFunctionFactory.h"
 #include "Functions/Factories/PolynomialFunctionFactory.h"
@@ -52,8 +54,10 @@ TEST_F(MonteCarloL1NormOptimizationTests, Minimize_WithPiecewiseLineFunctionAndL
 
 TEST_F(MonteCarloL1NormOptimizationTests, Minimize_WithInterpolationCubicSplineFunctionAndL1Functional_ShouldMinimize)
 {
-    auto interpolationCubicSplineFactory = std::make_unique<InterpolationCubicSplineFactory>(CUBIC_SPLINE_ARGUMENTS);
-    auto optimizator = *MonteCarloOptimizatorBuilder().SetFunctionFactory(std::move(interpolationCubicSplineFactory))
+    auto interpolationCubicSplineImplFactory = std::make_unique<InterpolationCubicSplineImplFactory>(CUBIC_SPLINE_ARGUMENTS);
+    auto cubicSplineFactory = std::make_unique<CubicSplineFactory>(std::move(interpolationCubicSplineImplFactory));
+
+    auto optimizator = *MonteCarloOptimizatorBuilder().SetFunctionFactory(std::move(cubicSplineFactory))
                                                      .SetFunctional(std::move(CubicSplineFunctional))
                                                      .SetMaxIterations(MaxIterations)
                                                      .SetMaxResidual(MaxResidual)
@@ -115,8 +119,10 @@ TEST_F(MonteCarloL2NormOptimizationTests, Minimize_WithPiecewiseLineFunctionAndL
 
 TEST_F(MonteCarloL2NormOptimizationTests, Minimize_WithInterpolationCubicSplineFunctionAndL2Functional_ShouldMinimize)
 {
-    auto interpolationCubicSplineFactory = std::make_unique<InterpolationCubicSplineFactory>(CUBIC_SPLINE_ARGUMENTS);
-    auto optimizator = *MonteCarloOptimizatorBuilder().SetFunctionFactory(std::move(interpolationCubicSplineFactory))
+    auto interpolationCubicSplineImplFactory = std::make_unique<InterpolationCubicSplineImplFactory>(CUBIC_SPLINE_ARGUMENTS);
+    auto cubicSplineFactory = std::make_unique<CubicSplineFactory>(std::move(interpolationCubicSplineImplFactory));
+
+    auto optimizator = *MonteCarloOptimizatorBuilder().SetFunctionFactory(std::move(cubicSplineFactory))
                                                      .SetFunctional(std::move(CubicSplineFunctional))
                                                      .SetMaxIterations(MaxIterations)
                                                      .SetMaxResidual(MaxResidual)
@@ -178,8 +184,10 @@ TEST_F(MonteCarloLInfNormOptimizationTests, Minimize_WithPiecewiseLineFunctionAn
 
 TEST_F(MonteCarloLInfNormOptimizationTests, Minimize_WithInterpolationCubicSplineFunctionAndLInfFunctional_ShouldMinimize)
 {
-    auto interpolationCubicSplineFactory = std::make_unique<InterpolationCubicSplineFactory>(CUBIC_SPLINE_ARGUMENTS);
-    auto optimizator = *MonteCarloOptimizatorBuilder().SetFunctionFactory(std::move(interpolationCubicSplineFactory))
+    auto interpolationCubicSplineImplFactory = std::make_unique<InterpolationCubicSplineImplFactory>(CUBIC_SPLINE_ARGUMENTS);
+    auto cubicSplineFactory = std::make_unique<CubicSplineFactory>(std::move(interpolationCubicSplineImplFactory));
+
+    auto optimizator = *MonteCarloOptimizatorBuilder().SetFunctionFactory(std::move(cubicSplineFactory))
                                                      .SetFunctional(std::move(CubicSplineFunctional))
                                                      .SetMaxIterations(MaxIterations)
                                                      .SetMaxResidual(MaxResidual)

@@ -1,11 +1,11 @@
 #pragma once
 
 #include "IFunction.h"
-#include "InterpolationSplineBase.h"
+#include "SplineBase.h"
 
 namespace Functions
 {
-class PiecewiseLineFunction : public IDifferentiableFunction, public InterpolationSplineBase
+class PiecewiseLineFunction : public IDifferentiableFunction, public SplineBase
 {
 public:
    PiecewiseLineFunction(const Vector& arguments, const Vector& parameters);
